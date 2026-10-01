@@ -1,0 +1,53 @@
+name: Publish
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    # Publishes only from knock-org/knock-sdk.
+    if: github.repository == 'knock-org/knock-sdk'
+    runs-on: ubuntu-latest
+    # Required reviewers on the "npm" environment are the release approval gate.
+    environment: npm
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Size budget
+        run: npm run size
+
+      # The version bump is manual (package.json). A push to main that doesn't bump it is a no-op
+      # here rather than a failed job: `npm view` succeeding means this version is already published.
+      - name: Publish if this version is new
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "knockai@${VERSION}" version >/dev/null 2>&1; then
+            echo "knockai@${VERSION} is already published — nothing to do."
+            exit 0
+          fi
+          echo "Publishing knockai@${VERSION}"
+          npm publish --provenance --access public

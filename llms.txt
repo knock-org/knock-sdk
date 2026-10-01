@@ -1,0 +1,82 @@
+# knockai
+
+> The Knock AI SDK for marketing sites and logged-in apps: identify people, track events, and open
+> the Knock scheduling modal. npm package: `knockai`. Zero dependencies, core ≤ 1.7 KB gzip, safe to
+> import on the server.
+
+## Install
+
+npm: `npm install knockai`, then `import { knock } from 'knockai'`.
+No build step: paste the CDN snippet from README.md ("CDN (no build step)") into `<head>`, once. It
+defines the same API on `window.knock` (and on `window.knockai`, for pages that already use `knock`).
+
+Framework bindings: `knockai/react`, `knockai/vue`, `knockai/angular`. Test mock: `knockai/testing`.
+
+## Minimum working integration
+
+```ts
+import { knock } from 'knockai';
+
+knock.init({ tagId: 'YOUR_TAG_ID' }); // website tag id on a marketing site; product tag id in a logged-in app
+
+knock.identify({ email: currentUser.email }); // as soon as you know who it is
+```
+
+Calls made before the SDK is ready are queued (up to 1,000) and sent in order once it is, so no
+readiness check is needed. On the server every call does nothing.
+
+## Two tags
+
+- Marketing site: init with the website tag's id. `identify()` captures a lead; Knock may research
+  the lead's company to help the sales team. The tag captures what it is set up to capture (page
+  views, clicks, forms).
+- Logged-in app: init with the product tag's id. `identify()` tells Knock which signed-in customer
+  this is. Nothing is captured by default, only the app's `track()` and `identify()` calls (plus
+  clicks on Knock's widget, if shown).
+- Same API on both. After ready, `knock.surface` is `'website'` or `'product'` (`undefined` before
+  ready, and on older tags).
+
+## API (exact types ship in the package, under `dist/types/`)
+
+- `init({ tagId, debug?, scriptUrl? })`: call once; a second call is ignored. `debug: true` prints
+  the SDK's own warnings.
+- `identify(traits)`: one argument. `traits.email` is required; `firstName`, `lastName`,
+  `company` (a company name string) and other fields are optional. Safe to call more than once.
+- `track(name, properties?)`: names are lowercased and turned into snake_case, cut to 64 characters,
+  and must start with a letter. Property values: string, number, boolean, Date (sent as an ISO
+  string), string[] or null; about 8 KB total. Invalid events are dropped without an error.
+- `modal.open({ magicLinkId?, email? })` / `modal.close()`: omit `magicLinkId` for the default
+  Knock modal; `email` is only used with `magicLinkId`.
+- `scheduling.load({ magicLinkId, email?, onStatusChange? })` returns `{ open(), close(), status }`.
+- `widget.show()` / `widget.hide()` / `widget.open()` / `widget.close()`
+- `on(event, handler)` returns an unsubscribe function. Events: `ready`, `modal:open`,
+  `modal:close`, `widget:open`, `widget:close`, `error`. `ready` fires once; a handler added
+  after that still runs, once.
+- Read-only: `knock.ready`, `knock.version`, `knock.surface`.
+- React: `KnockProvider`, `KnockButton`, `useKnock`, `useKnockIdentify`, `useKnockEvent`. Vue:
+  `KnockPlugin`, `useKnock`, `KnockButton`. Angular: `provideKnock`, and `inject(KNOCK)` for the SDK in components.
+
+## Rules for an AI agent adding this SDK
+
+- Call `init()` once, as early as possible. Use the tag id the user gives you.
+- Call `identify()` right after sign-in or session load in an app, or once a visitor gives their
+  email on a site. Not on every render.
+- Don't use trait names the website tag already sends. These include `userId`, `sessionId`,
+  `vendorId`, `tagId`, `tagVersion`, `clientId`, `version`, `uidSource`, `timestamp`, `pageVisit`,
+  `pageNumber`, `tabPageNumber`, `revisionNumber`, `referrerUrl`, `utm_source`, `utm_medium`,
+  `utm_campaign`, `utm_content`, `utm_term`, `hubspotutk`, `gclid`, `__khsc` and `elementCopy`.
+- Don't build magic link ids or event names from user input.
+- In Next.js, `KnockProvider` can render from a server component; call the hooks only from client
+  components.
+- Don't change the CDN snippet's code.
+
+## Docs
+
+- docs/quickstart.md: install, init options, first identify and track
+- docs/identify.md: what identify() does on each tag, traits
+- docs/events.md: track(), names, properties, limits
+- docs/widget-and-modals.md: modal.open, scheduling.load, buttons, widget, on()
+- docs/frameworks/{react,vue,angular,vanilla}.md
+- docs/platforms.md: Shopify, Wix, Webflow, Framer, WordPress, AI app builders
+- docs/csp.md: Content-Security-Policy
+- docs/faq.md

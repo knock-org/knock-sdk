@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Knock support
+    url: https://knock-ai.com
+    about: Account or dashboard questions go to support, not this repo.

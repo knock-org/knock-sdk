@@ -47,5 +47,15 @@ document <head>, once. Once the signed-in user is known, call:
 Replace YOUR_TAG_ID in the snippet with the tag id I give you. Don't change the snippet's code.
 ```
 
-For AI coding agents working in your repo (Claude Code, Cursor and similar), point them at
-[`llms.txt`](../llms.txt).
+For AI coding agents working in your repo (Claude Code, Codex, Cursor, GitHub Copilot, Gemini CLI,
+Windsurf and others), run `npx skills add knock-org/knock-sdk`. It installs the install skill for
+the agents it detects; add `-a <agent>` to choose. Then ask your agent to install the Knock SDK. In
+Claude Code you can type `/install-knock-sdk`, and in Codex `$install-knock-sdk`.
+
+If your agent doesn't support skills, paste this into it:
+
+```text
+Install the Knock SDK by following https://raw.githubusercontent.com/knock-org/knock-sdk/main/skills/install-knock-sdk/SKILL.md
+```
+
+Or point it at [`llms.txt`](../llms.txt).

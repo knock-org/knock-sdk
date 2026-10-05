@@ -1,6 +1,6 @@
 {
   "name": "knockai",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Knock AI SDK \u2014 identify people, send events and open the Knock widget from your website or your logged-in app. Zero dependencies.",
   "license": "MIT",
   "homepage": "https://knock-ai.com",

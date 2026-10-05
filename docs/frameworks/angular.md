@@ -27,6 +27,7 @@ import { KNOCK } from 'knockai/angular';
 
 @Component({
   selector: 'app-dashboard',
+  standalone: true,
   template: `
     <button
       (pointerenter)="knock.scheduling.load({ magicLinkId: 'a1b2c3' })"

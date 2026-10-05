@@ -36,5 +36,6 @@ Yes. `ready` fires once, and a handler you add after that still runs, once. See
 Use `knockai/testing`. See [Testing](frameworks/react.md#testing).
 
 **I'm using an AI app builder (Base44, Lovable, Bolt, …). Is there a prompt I can give it?**
-Yes, see [AI app builders](platforms.md#ai-app-builders). For AI coding agents in your repo, point
-them at [`llms.txt`](../llms.txt).
+Yes, see [AI app builders](platforms.md#ai-app-builders). For AI coding agents in your repo, see
+[Install with your AI agent](../README.md#install-with-your-ai-agent), or point them at
+[`llms.txt`](../llms.txt).

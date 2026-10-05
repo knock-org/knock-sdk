@@ -11,6 +11,12 @@ No build step: paste the CDN snippet from README.md ("CDN (no build step)") into
 defines the same API on `window.knock` (and on `window.knockai`, for pages that already use `knock`).
 
 Framework bindings: `knockai/react`, `knockai/vue`, `knockai/angular`. Test mock: `knockai/testing`.
+With an AI coding agent: `npx skills add knock-org/knock-sdk` installs the install skill for the
+agents it detects (`-a <agent>` to choose). Then ask the agent to install the Knock SDK (in Claude
+Code, `/install-knock-sdk`; in Codex, `$install-knock-sdk`). An agent without skills support can
+follow
+https://raw.githubusercontent.com/knock-org/knock-sdk/main/skills/install-knock-sdk/SKILL.md
+directly.
 
 ## Minimum working integration
 
@@ -80,3 +86,4 @@ readiness check is needed. On the server every call does nothing.
 - docs/platforms.md: Shopify, Wix, Webflow, Framer, WordPress, AI app builders
 - docs/csp.md: Content-Security-Policy
 - docs/faq.md
+- skills/install-knock-sdk/SKILL.md: the step-by-step install for coding agents

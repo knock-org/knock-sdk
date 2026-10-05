@@ -5,7 +5,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0] - Unreleased
+## [0.1.1] - Unreleased
+
+### Added
+
+- Install with your AI agent. `npx skills add knock-org/knock-sdk` adds an install skill to the
+  coding agents it detects (Claude Code, Codex, Cursor, GitHub Copilot, Gemini CLI, Windsurf,
+  OpenCode and others; `-a <agent>` to choose). Then ask your agent to install the Knock SDK, or
+  type `/install-knock-sdk` in Claude Code or `$install-knock-sdk` in Codex. It says what it will
+  do and asks before it starts, suggests events to track, and adds `track()` calls for the ones you
+  pick. An agent without skills support can follow
+  https://raw.githubusercontent.com/knock-org/knock-sdk/main/skills/install-knock-sdk/SKILL.md.
+
+## [0.1.0] - 2026-10-01
 
 First public release.
 
@@ -21,4 +33,5 @@ First public release.
 - `knockai/testing`: an in-memory mock for your tests.
 - Core is about 1.7 KB gzip, with zero dependencies.
 
+[0.1.1]: https://github.com/knock-org/knock-sdk/releases/tag/v0.1.1
 [0.1.0]: https://github.com/knock-org/knock-sdk/releases/tag/v0.1.0

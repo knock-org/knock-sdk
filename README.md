@@ -21,6 +21,28 @@ scheduling modal, on your marketing site or in your logged-in app. It loads your
 and queues your calls until it's ready, so you never have to wait for it. It's typed, has zero
 dependencies, and the core is ≤ 1.7 KB gzip.
 
+## Install with your AI agent
+
+1. Add the install skill to your coding agent:
+
+   ```bash
+   npx skills add knock-org/knock-sdk
+   ```
+
+   It installs the skill for the agents it detects (Claude Code, Codex, Cursor, GitHub Copilot,
+   Gemini CLI, Windsurf, OpenCode and others). To choose, add `-a <agent>`, for example `-a cursor`.
+2. Ask your agent to install the Knock SDK. In Claude Code you can type `/install-knock-sdk`, and
+   in Codex `$install-knock-sdk`.
+
+It tells you what it will do and asks before it starts. Then it looks through your project, suggests
+events to track, asks for your tag id, shows you a plan, and installs `knockai`.
+
+If your agent doesn't support skills, paste this into it:
+
+```text
+Install the Knock SDK by following https://raw.githubusercontent.com/knock-org/knock-sdk/main/skills/install-knock-sdk/SKILL.md
+```
+
 ## Install
 
 ### npm

@@ -1,6 +1,6 @@
 ---
 name: install-knock-sdk
-description: "Installs the Knock AI SDK (knockai, which loads the Knock tag) in a web project: React, Next.js, Vue, Nuxt, Angular, plain JavaScript or HTML pages. Use it when the user asks to install, add or set up Knock, Knock AI, knockai, the Knock SDK or the Knock tag in their site or app, and not for anything else. It first says what it will do and waits for a yes. Then it looks through the project, suggests events to track, asks for the Knock tag id, installs knockai, adds the setup, identify and track() calls, updates the Content-Security-Policy if there is one, and runs the build. @knocklabs packages are a different company's product: this skill isn't for them."
+description: "Installs the Knock AI SDK (@knock-ai/sdk, formerly knockai, which loads the Knock tag) in a web project: React, Next.js, Vue, Nuxt, Angular, plain JavaScript or HTML pages. Use it when the user asks to install, add or set up Knock, Knock AI, @knock-ai/sdk, knockai, the Knock SDK or the Knock tag in their site or app, or to move from knockai to @knock-ai/sdk, and not for anything else. It first says what it will do and waits for a yes. Then it looks through the project, suggests events to track, asks for the Knock tag id, installs @knock-ai/sdk, adds the setup, identify and track() calls, updates the Content-Security-Policy if there is one, and runs the build. @knocklabs packages are a different company's product: this skill isn't for them."
 license: MIT
 compatibility: "Web projects: React, Next.js, Vue, Nuxt, Angular, plain JavaScript or HTML pages. For any coding agent that can read files and run shell commands. Installing from npm needs network access."
 metadata:
@@ -9,10 +9,10 @@ metadata:
 
 # Install the Knock AI SDK
 
-Add `knockai` to this project so it loads the user's Knock tag, tells Knock who people are, records
-the actions they pick and, if they want, opens their Knock scheduling modal. Read this whole file
-before you start, to its last line: it's about 450 lines, and the plan and report formats are in
-steps 3 and 7, near the end. Then work through the steps in order. Open a file in `references/`
+Add `@knock-ai/sdk` to this project so it loads the user's Knock tag, tells Knock who people are,
+records the actions they pick and, if they want, opens their Knock scheduling modal. Read this whole
+file before you start, to its last line: it's about 470 lines, and the plan and report formats are
+in steps 3 and 7, near the end. Then work through the steps in order. Open a file in `references/`
 only when a step sends you there. If you're reading this from a URL, its links are relative to
 that URL.
 
@@ -72,10 +72,11 @@ that URL.
   and the read-only `ready`, `version` and `surface`. There's no sign-out or reset call to add.
 - **Re-running is safe.** Detect what's already installed and only fill the gaps
   ([Already installed](#already-installed)). Running this on a finished install changes nothing.
-- **The installed package wins.** After installing, the types in `node_modules/knockai/dist/types/`
-  are the source of truth for the API, and `node_modules/knockai/README.md` for how to use it (the
+- **The installed package wins.** After installing, the types in
+  `node_modules/@knock-ai/sdk/dist/types/` are the source of truth for the API, and
+  `node_modules/@knock-ai/sdk/README.md` for how to use it (the
   `docs/` pages it links to aren't in the package). On HTML pages nothing is installed: the README
-  is at `https://cdn.jsdelivr.net/npm/knockai@0.1/README.md`. If this skill disagrees with them,
+  is at `https://cdn.jsdelivr.net/npm/@knock-ai/sdk@0.1/README.md`. If this skill disagrees with them,
   follow them.
 
 ## 0. Explain, and get a yes
@@ -142,9 +143,9 @@ set as exclude globs.
    | No `package.json`, or only HTML templates (static site, Shopify or WordPress theme, Hugo, Jekyll, Eleventy) | [cdn.md](references/cdn.md) |
 
    A Next.js app with both `app/` and `pages/` uses both Next.js recipes. If the app is on React
-   below 17, Vue below 3 or Angular below 17, stop and tell the user `knockai` needs at least that.
-   If it's a React Native app (`react-native` without `react-dom`), stop: `knockai` runs in web
-   pages only.
+   below 17, Vue below 3 or Angular below 17, stop and tell the user `@knock-ai/sdk` needs at least
+   that. If it's a React Native app (`react-native` without `react-dom`), stop: `@knock-ai/sdk` runs
+   in web pages only.
 4. **Language.** TypeScript if the app has a `tsconfig.json`. Write new files in the language and
    extension the app already uses.
 5. **Package manager**, from the lockfile (at the repo root in a monorepo): `pnpm-lock.yaml` is
@@ -152,15 +153,16 @@ set as exclude globs.
 6. **Sign-in.** The auth library, or the app's own current-user hook or store, and whether the app
    reads the user in the browser or on the server. See [identify.md](references/identify.md).
 7. **Knock already there?**
-   - `knockai` in the dependencies, imports from `knockai`, `knockai.init(` or
-     `cdn.jsdelivr.net/npm/knockai`: partly or fully installed. Note what exists, including each
-     `track('...')` call and its event name, and only fill gaps
-     ([Already installed](#already-installed)).
+   - `@knock-ai/sdk` or `knockai` in the dependencies, imports from either, `knockai.init(`,
+     `cdn.jsdelivr.net/npm/@knock-ai/sdk` or `cdn.jsdelivr.net/npm/knockai`: partly or fully
+     installed. Note what exists, including each `track('...')` call and its event name, and only
+     fill gaps ([Already installed](#already-installed)). `knockai` is the old name of
+     `@knock-ai/sdk`; same API. An install under the old name is swapped for the new one (step 3).
    - A `<script>` that loads `js.knock-ai.com` or `knock-tag-build`: the Knock tag is already on
      the page. See step 5.
    - `@knocklabs/*` packages are a different company's product, not Knock AI. Leave them alone. If
      a file already imports their `KnockProvider`, import ours as
-     `import { KnockProvider as KnockAIProvider } from 'knockai/react'`.
+     `import { KnockProvider as KnockAIProvider } from '@knock-ai/sdk/react'`.
 8. **Content-Security-Policy.** Search the app for `Content-Security-Policy`. See step 5.
 9. **Env conventions.** Which env files exist and which are committed, names only:
    `ls -A | grep -E '^\.env'` and `git ls-files -- '.env*'` in the app's directory
@@ -259,8 +261,9 @@ What the existing install shows counts as answered:
 - **Events.** An event already tracked (a `track('name'` call) is done: list it under Already
   there, and never add a second call for it.
 - **The button.** An existing `KnockButton` or `modal.open(...)` call answers it.
-- **The package.** If `knockai` is already in the app's dependencies, don't run the install
-  command, which could upgrade it. Keep its version and report it.
+- **The package.** If `@knock-ai/sdk` is already in the app's dependencies, don't run the install
+  command, which could upgrade it. Keep its version and report it. If `knockai` is there instead,
+  that's the old name: the plan swaps it (step 3), and everything else it shows still counts.
 
 ### One codebase, both tags
 
@@ -287,7 +290,7 @@ the other files:
 
 ```text
 Plan for apps/web
-  install                   pnpm add knockai
+  install                   pnpm add @knock-ai/sdk
   .env.local                + NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID
   .env.example              + NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID=
   app/layout.tsx            wrap {children} in <KnockProvider>
@@ -307,15 +310,33 @@ With a route-group split, the moves and new layouts look like this:
   app/layout.tsx               deleted
 ```
 
+When the app has `knockai`, the old name, the install line swaps it, and each file that imports
+it gets a line. Say why, in the plan's last line:
+
+```text
+  install                   pnpm remove knockai, then pnpm add @knock-ai/sdk
+  app/layout.tsx:3          import from @knock-ai/sdk/react instead of knockai/react
+  lib/analytics.ts:1        import from @knock-ai/sdk instead of knockai
+  knockai is the old name of @knock-ai/sdk; same API.
+```
+
 Then ask one picker question (header `Plan`): **Install it** (Recommended), **Change something**,
 **Cancel**. Skip it if the request itself had a clear yes (step 0) and nothing had to be asked
 since: that yes covers the plan, so show it and go on in the same turn. Then install from the
-app's directory with its package manager and the bare package name: `npm install knockai`,
-`pnpm add knockai`, `yarn add knockai` or `bun add knockai`. Skip this if `knockai` is already a
-dependency. Don't pin or invent a version, don't edit `package.json` by hand, and don't add
-`--force` or `--legacy-peer-deps`. Try once. If it fails for a reason that isn't `knockai` (an
-existing peer conflict, no network, a broken lockfile), stop and report the command and the error.
-The CDN recipe installs nothing.
+app's directory with its package manager and the bare package name: `npm install @knock-ai/sdk`,
+`pnpm add @knock-ai/sdk`, `yarn add @knock-ai/sdk` or `bun add @knock-ai/sdk`. Skip this if
+`@knock-ai/sdk` is already a dependency. Don't pin or invent a version, don't edit `package.json` by
+hand, and don't add `--force` or `--legacy-peer-deps`. Try once. If it fails for a reason that isn't
+`@knock-ai/sdk` (an existing peer conflict, no network, a broken lockfile), stop and report the
+command and the error. The CDN recipe installs nothing.
+
+**Swapping `knockai`.** If `knockai` is a dependency, remove it first with the same package manager
+(`npm uninstall knockai`, `pnpm remove knockai`, `yarn remove knockai` or `bun remove knockai`),
+then install `@knock-ai/sdk` as above. Then change every `knockai` import, `require` and test mock
+path to `@knock-ai/sdk`, keeping the subpath: `knockai/react` becomes `@knock-ai/sdk/react`, and
+likewise for `/vue`, `/angular`, `/testing` and any other. Change nothing else: the API is the same. On HTML pages,
+a snippet that loads from `cdn.jsdelivr.net/npm/knockai` is replaced with the current one
+([cdn.md](references/cdn.md)); `knockai.init(...)` and the other `knockai.` calls stay.
 
 ## 4. Write the code
 
@@ -338,7 +359,8 @@ Follow the recipe. They all use the same pieces:
   `knock.track('name', { ...properties })` inside the existing handler, after the action has
   succeeded, once per action. Never in a render, a template expression or an effect that runs on
   load, and never in server code. Get `knock` the framework's way: React and Vue `useKnock()`,
-  Angular `inject(KNOCK)`, other code `import { knock } from 'knockai'`, HTML pages `knockai`. These
+  Angular `inject(KNOCK)`, other code `import { knock } from '@knock-ai/sdk'`, HTML pages `knockai`
+  (the global the snippet defines). These
   work while Knock is off (no tag id set): the call just isn't sent, so it needs no guard.
 - **No readiness checks.** Calls made before `init()`, or before Knock has loaded, are queued (up to
   1,000) and sent in order.
@@ -354,7 +376,7 @@ or a proxy, say so in the report.
 
 **A Knock tag already on the page.** If the app already loads the Knock tag with its own `<script>`
 (from `js.knock-ai.com` or `.../knock-tag-build/...`), keep it and don't add a second one: when
-`init()` runs, `knockai` uses a Knock tag that's already on the page, loaded or still loading.
+`init()` runs, the SDK uses a Knock tag that's already on the page, loaded or still loading.
 
 - Init with the same tag id. If you can't tell that the existing script is for the id the user
   pasted, ask. With a different id, the page keeps running the tag that's already there, and the
@@ -377,7 +399,7 @@ condense it, turn it into prose or links, or leave out a section: write `none` u
 Anything else you need to say goes inside it, under Skipped or Before you merge, not after it.
 
 ```text
-Knock AI SDK installed in apps/web: knockai 0.1.1, with pnpm
+Knock AI SDK installed in apps/web: @knock-ai/sdk 0.1.2, with pnpm
 Checks: typecheck passed, build passed, no lint script
 
 Changed
@@ -385,7 +407,7 @@ Changed
   app/knock-identify.tsx:1        new: identifies the signed-in user (Clerk)
   .env.local                      + NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID
   .env.example:4                  + NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID=
-  package.json, pnpm-lock.yaml    + knockai
+  package.json, pnpm-lock.yaml    + @knock-ai/sdk
 Moved
   none
 Events added
@@ -412,13 +434,15 @@ Before you merge
 ```
 
 - **Changed**: every change as `path:line`. Name env vars, but don't print what's in `.env` files.
+  After a swap, the package line is `- knockai, + @knock-ai/sdk`, and each rewritten import has its
+  own line.
 - **Moved**: one `old -> new` line per move. Unstaged moves show in `git status` as a deleted file
   and a new one.
 - **Events added**: the table, header row included: name, `file:line`, properties (`-` for none).
 - **Already there**: what you found and kept: the package and its version, the setup, env vars,
   identify, and each event already tracked, with its `file:line`.
 - **A re-run that changes nothing**: the first line is
-  `Knock AI SDK already installed in apps/web: knockai 0.1.1. Nothing changed.`, Changed is
+  `Knock AI SDK already installed in apps/web: @knock-ai/sdk 0.1.2. Nothing changed.`, Changed is
   `Nothing changed`, Moved and Events added are `none`, and everything goes under Already there.
   Never say added or installed about something that was already there.
 - **Check it in your browser**: the steps as written, with the app's own dev command, routes and
@@ -426,10 +450,9 @@ Before you merge
 - **Before you merge** also lists any uncommitted changes that were there before you started, left
   untouched. After a route-group split, it also says that a URL matching no page now shows
   Next.js's default 404 page, without either layout.
-- Take the version from `node_modules/knockai/package.json`: read the file, don't run code for it.
-  On HTML pages, say
-  `knockai@0.1 from jsDelivr, nothing installed`, and say to open the page through the site's local
-  server or its deployed URL.
+- Take the version from `node_modules/@knock-ai/sdk/package.json`: read the file, don't run code
+  for it. On HTML pages, say `@knock-ai/sdk@0.1 from jsDelivr, nothing installed`, and say to open
+  the page through the site's local server or its deployed URL.
 - Add the event notes from [events.md](references/events.md#in-the-report) where they fit.
 - If the tag id variable is unset, the "is not set, so Knock is off" warning shows in the browser
   Console, or in the dev server's terminal when the file renders on the server (a Next.js root

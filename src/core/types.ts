@@ -1,5 +1,5 @@
 /**
- * Public contract of the `knockai` SDK. Everything the vendor's code can call is
+ * Public contract of the `@knock-ai/sdk` SDK. Everything the vendor's code can call is
  * declared here; the runtime (the Knock tag, loaded from Knock's CDN) implements it.
  * Keep this file dependency-free and DOM-agnostic: it is shared by the core and
  * every framework binding.

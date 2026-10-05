@@ -100,7 +100,7 @@ describe('KnockProvider init options', () => {
   it('forwards every KnockInitOptions key', async () => {
     const { render } = await import('@testing-library/react');
     const { KnockProvider } = await import('./KnockProvider.js');
-    const { knock } = await import('knockai');
+    const { knock } = await import('@knock-ai/sdk');
     const init = vi.spyOn(knock, 'init').mockImplementation(() => {});
     render(<KnockProvider tagId="t1" scriptUrl="https://example.com/rt.js" environment="staging" debug />);
     expect(init).toHaveBeenCalledWith({ tagId: 't1', scriptUrl: 'https://example.com/rt.js', environment: 'staging', debug: true });

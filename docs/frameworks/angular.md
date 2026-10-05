@@ -1,13 +1,13 @@
 # Angular
 
 ```bash
-npm install knockai
+npm install @knock-ai/sdk
 ```
 
 ```ts
 // main.ts
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideKnock } from 'knockai/angular';
+import { provideKnock } from '@knock-ai/sdk/angular';
 import { AppComponent } from './app.component';
 
 bootstrapApplication(AppComponent, {
@@ -23,7 +23,7 @@ bootstrapApplication(AppComponent, {
 
 ```ts
 import { Component, OnInit, inject } from '@angular/core';
-import { KNOCK } from 'knockai/angular';
+import { KNOCK } from '@knock-ai/sdk/angular';
 
 @Component({
   selector: 'app-dashboard',
@@ -51,7 +51,7 @@ export class DashboardComponent implements OnInit {
 }
 ```
 
-`inject(KNOCK)` gives you the same `knock` object as `import { knock } from 'knockai'`, so every
+`inject(KNOCK)` gives you the same `knock` object as `import { knock } from '@knock-ai/sdk'`, so every
 method is there. You don't need to wait for the SDK to be ready. Calls made before then are queued.
 Loading the scheduling modal on hover means a click opens it with times already there. See
 [Scheduling modal and widget](../widget-and-modals.md).

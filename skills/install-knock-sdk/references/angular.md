@@ -1,13 +1,13 @@
 # Angular
 
-Import from `knockai/angular`: `provideKnock(options)` and the `KNOCK` token.
+Import from `@knock-ai/sdk/angular`: `provideKnock(options)` and the `KNOCK` token.
 
 ## Initialize: `provideKnock`
 
 Standalone app: add it to the providers in `src/app/app.config.ts`, after the existing ones:
 
 ```ts
-import { provideKnock } from 'knockai/angular';
+import { provideKnock } from '@knock-ai/sdk/angular';
 import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
@@ -32,7 +32,7 @@ export const appConfig: ApplicationConfig = {
 
 Use the Angular pattern in [identify.md](identify.md): `inject(KNOCK)` in the service or component
 where sign-in resolves, and call `identify()` once per sign-in or session load. `inject(KNOCK)`
-gives the same object as `import { knock } from 'knockai'`.
+gives the same object as `import { knock } from '@knock-ai/sdk'`.
 
 ## Book a demo
 

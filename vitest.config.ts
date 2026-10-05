@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  resolve: { alias: { knockai: new URL('./src/core/index.ts', import.meta.url).pathname } },
+  resolve: { alias: { '@knock-ai/sdk': new URL('./src/core/index.ts', import.meta.url).pathname } },
   test: {
     environment: 'jsdom',
     globals: true,

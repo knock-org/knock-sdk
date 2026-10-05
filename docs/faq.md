@@ -1,7 +1,7 @@
 # FAQ
 
-**Is `knockai` the same as the Knock tag on our website?**
-No. `knockai` is the SDK. It loads one of your two Knock tags (your website tag or your product tag)
+**Is `@knock-ai/sdk` the same as the Knock tag on our website?**
+No. `@knock-ai/sdk` is the SDK. It loads one of your two Knock tags (your website tag or your product tag)
 and gives your code one typed API for it. See [One SDK, two tags](../README.md#one-sdk-two-tags).
 
 **Do I need both tags?**
@@ -33,7 +33,7 @@ Yes. `ready` fires once, and a handler you add after that still runs, once. See
 [Listening for events](widget-and-modals.md#listening-for-events).
 
 **How do I test components that call Knock?**
-Use `knockai/testing`. See [Testing](frameworks/react.md#testing).
+Use `@knock-ai/sdk/testing`. See [Testing](frameworks/react.md#testing).
 
 **I'm using an AI app builder (Base44, Lovable, Bolt, …). Is there a prompt I can give it?**
 Yes, see [AI app builders](platforms.md#ai-app-builders). For AI coding agents in your repo, see

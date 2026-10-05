@@ -7,7 +7,7 @@ vi.mock('../../core', () => ({ knock }));
 import { KNOCK } from './knock.token.js';
 
 describe('KNOCK', () => {
-  it('is provided in root and resolves to the shared knockai instance', () => {
+  it('is provided in root and resolves to the shared `knock` instance', () => {
     const prov = (KNOCK as any).ɵprov;
     expect(prov.providedIn).toBe('root');
     expect(prov.factory()).toBe(knock);

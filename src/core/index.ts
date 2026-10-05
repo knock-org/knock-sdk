@@ -183,7 +183,7 @@ const realKnock = createKnock();
 let activeKnock: KnockSDK = realKnock;
 
 /**
- * The shared knockai instance. Property reads resolve through `activeKnock` at
+ * The shared `knock` instance. Property reads resolve through `activeKnock` at
  * access time, so `__setKnockForTesting` can redirect every framework binding
  * without any of them re-importing anything.
  */
@@ -196,7 +196,7 @@ export default knock;
 
 /**
  * Test-only hook: redirects the `knock` singleton to `sdk` (e.g. a
- * `createKnockMock()` from `knockai/testing`), or back to the real SDK when
+ * `createKnockMock()` from `@knock-ai/sdk/testing`), or back to the real SDK when
  * called with `undefined`.
  */
 export function __setKnockForTesting(sdk: KnockSDK | undefined): void {

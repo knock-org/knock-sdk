@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { KnockEventMap, KnockEventName } from 'knockai';
+import type { KnockEventMap, KnockEventName } from '@knock-ai/sdk';
 import { useKnock } from './useKnock.js';
 
 export function useKnockEvent<E extends KnockEventName>(

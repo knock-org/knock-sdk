@@ -38,7 +38,7 @@ Most AI app builders (Base44, Lovable, Bolt, v0 and similar) can add the snippet
 into their chat:
 
 ```
-Add the Knock AI SDK (knockai) to this app. Paste the CDN snippet from
+Add the Knock AI SDK (@knock-ai/sdk) to this app. Paste the CDN snippet from
 https://github.com/knock-org/knock-sdk (README.md, "CDN (no build step)" section) into the
 document <head>, once. Once the signed-in user is known, call:
 

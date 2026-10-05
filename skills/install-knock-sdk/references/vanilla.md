@@ -1,14 +1,14 @@
 # Plain JavaScript with a bundler
 
-Use the core package: `import { knock } from 'knockai'` (the default export is the same object;
-CommonJS: `const { knock } = require('knockai')`).
+Use the core package: `import { knock } from '@knock-ai/sdk'` (the default export is the same object;
+CommonJS: `const { knock } = require('@knock-ai/sdk')`).
 
 ## Initialize: the entry module
 
 At the top of the module every page loads:
 
 ```ts
-import { knock } from 'knockai';
+import { knock } from '@knock-ai/sdk';
 
 const knockTagId = import.meta.env.VITE_KNOCK_WEBSITE_TAG_ID;
 if (knockTagId) knock.init({ tagId: knockTagId });
@@ -29,7 +29,7 @@ and runs it once per page:
 
 ```astro
 <script>
-  import { knock } from 'knockai';
+  import { knock } from '@knock-ai/sdk';
 
   const knockTagId = import.meta.env.PUBLIC_KNOCK_WEBSITE_TAG_ID;
   if (knockTagId) knock.init({ tagId: knockTagId });
@@ -42,7 +42,7 @@ and runs it once per page:
 <script>
   import { onMount } from 'svelte';
   import { env } from '$env/dynamic/public';
-  import { knock } from 'knockai';
+  import { knock } from '@knock-ai/sdk';
 
   onMount(() => {
     if (env.PUBLIC_KNOCK_WEBSITE_TAG_ID) knock.init({ tagId: env.PUBLIC_KNOCK_WEBSITE_TAG_ID });

@@ -1,6 +1,6 @@
 import { APP_INITIALIZER, makeEnvironmentProviders, type EnvironmentProviders } from '@angular/core';
-import type { KnockInitOptions } from 'knockai';
-import { knock } from 'knockai';
+import type { KnockInitOptions } from '@knock-ai/sdk';
+import { knock } from '@knock-ai/sdk';
 
 export function initKnockRuntime(options: KnockInitOptions): void {
   knock.init(options);

@@ -1,4 +1,4 @@
-# `knockai/testing`
+# `@knock-ai/sdk/testing`
 
 An in-memory `KnockSDK` test double — zero DOM access, records every call, and swaps
 into the framework bindings so component tests never load your Knock tag.
@@ -6,7 +6,7 @@ into the framework bindings so component tests never load your Knock tag.
 ## Vitest
 
 ```ts
-import { createKnockMock, installKnockMock, uninstallKnockMock, type KnockMock } from 'knockai/testing';
+import { createKnockMock, installKnockMock, uninstallKnockMock, type KnockMock } from '@knock-ai/sdk/testing';
 
 let knock: KnockMock;
 
@@ -30,7 +30,7 @@ it('identifies the signed-in user', () => {
 Same API — nothing here is Vitest-specific:
 
 ```ts
-import { createKnockMock, installKnockMock, uninstallKnockMock } from 'knockai/testing';
+import { createKnockMock, installKnockMock, uninstallKnockMock } from '@knock-ai/sdk/testing';
 
 let knock;
 
@@ -60,5 +60,5 @@ test('tracks the upgrade event', () => {
 - `mock.clearCalls()` — clears `mock.calls`; subscriptions registered with `mock.on` stay
   active.
 - `installKnockMock(mock)` / `uninstallKnockMock()` — swap the singleton the
-  `knockai/react`, `knockai/vue` and `knockai/angular` bindings resolve `knock`
+  `@knock-ai/sdk/react`, `@knock-ai/sdk/vue` and `@knock-ai/sdk/angular` bindings resolve `knock`
   through, so components under test talk to the mock instead of the real SDK.

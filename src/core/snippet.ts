@@ -8,7 +8,7 @@
 import type { KnockSchedulingHandle } from './types.js';
 import { isKnockGlobal, type KnockStub, type StubCall } from './globals.js';
 
-const FACADE_URL = 'https://cdn.jsdelivr.net/npm/knockai@0.1/dist/knockai.iife.js';
+const FACADE_URL = 'https://cdn.jsdelivr.net/npm/@knock-ai/sdk@0.1/dist/knockai.iife.js';
 const PATHS = [
   'init',
   'identify',

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { KnockIdentifyTraits } from 'knockai';
+import type { KnockIdentifyTraits } from '@knock-ai/sdk';
 import { useKnock } from './useKnock.js';
 
 export function useKnockIdentify(traits: KnockIdentifyTraits): void {

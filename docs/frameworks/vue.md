@@ -1,13 +1,13 @@
 # Vue
 
 ```bash
-npm install knockai
+npm install @knock-ai/sdk
 ```
 
 ```ts
 // main.ts
 import { createApp } from 'vue';
-import { KnockPlugin } from 'knockai/vue';
+import { KnockPlugin } from '@knock-ai/sdk/vue';
 import App from './App.vue';
 
 createApp(App)
@@ -23,7 +23,7 @@ createApp(App)
 ```vue
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useKnock } from 'knockai/vue';
+import { useKnock } from '@knock-ai/sdk/vue';
 
 const knock = useKnock();
 const props = defineProps<{ user: { email: string; firstName: string } }>();
@@ -38,14 +38,14 @@ onMounted(() => {
 </template>
 ```
 
-`useKnock()` returns the same `knock` you'd get from `import { knock } from 'knockai'`. You don't
+`useKnock()` returns the same `knock` you'd get from `import { knock } from '@knock-ai/sdk'`. You don't
 need to wait for the SDK to be ready. Calls made before then are queued.
 
 ## `KnockButton`
 
 ```vue
 <script setup lang="ts">
-import { KnockButton } from 'knockai/vue';
+import { KnockButton } from '@knock-ai/sdk/vue';
 </script>
 
 <template>

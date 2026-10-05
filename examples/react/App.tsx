@@ -1,8 +1,8 @@
-// Example: `knockai/react` in a logged-in app. Not built as part of this repo;
+// Example: `@knock-ai/sdk/react` in a logged-in app. Not built as part of this repo;
 // see docs/frameworks/react.md.
 
 import { useEffect } from 'react';
-import { KnockProvider, KnockButton, useKnock } from 'knockai/react';
+import { KnockProvider, KnockButton, useKnock } from '@knock-ai/sdk/react';
 
 interface CurrentUser {
   email: string;

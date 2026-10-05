@@ -17,7 +17,7 @@ don't need to pass `email`.
 ## React
 
 ```tsx
-import { KnockButton } from 'knockai/react';
+import { KnockButton } from '@knock-ai/sdk/react';
 
 <KnockButton magicLinkId="the-pasted-magic-link-id">Book a demo</KnockButton>
 ```
@@ -33,7 +33,7 @@ import { KnockButton } from 'knockai/react';
 
 ```vue
 <script setup lang="ts">
-import { KnockButton } from 'knockai/vue';
+import { KnockButton } from '@knock-ai/sdk/vue';
 </script>
 
 <template>
@@ -69,7 +69,7 @@ document.getElementById('book-demo').addEventListener('click', function () {
 ```
 
 `knockai.modal.open()` with no arguments opens the default modal. With the npm package, use
-`knock.modal.open(...)` from `import { knock } from 'knockai'`.
+`knock.modal.open(...)` from `import { knock } from '@knock-ai/sdk'`.
 
 ## Links on a marketing site
 

@@ -1,6 +1,6 @@
 # Next.js (App Router)
 
-`knockai/react` is a client module: it's marked `'use client'`. So `KnockProvider` can be rendered
+`@knock-ai/sdk/react` is a client module: it's marked `'use client'`. So `KnockProvider` can be rendered
 from the root layout, which stays a server component.
 
 ## Initialize: the root layout
@@ -10,7 +10,7 @@ and the wrapper around `children`. Keep everything else as it is, including `met
 component's name and its props type: the example below only shows where the Knock lines go.
 
 ```tsx
-import { KnockProvider } from 'knockai/react';
+import { KnockProvider } from '@knock-ai/sdk/react';
 
 const knockTagId = process.env.NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID;
 if (!knockTagId && process.env.NODE_ENV === 'development') console.warn('NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID is not set, so Knock is off');
@@ -56,7 +56,7 @@ with the user's email, and names when the app has them as separate fields, as pr
 ```tsx
 'use client';
 
-import { useKnockIdentify } from 'knockai/react';
+import { useKnockIdentify } from '@knock-ai/sdk/react';
 
 export function KnockIdentify(traits: { email: string; firstName?: string; lastName?: string }) {
   useKnockIdentify(traits);

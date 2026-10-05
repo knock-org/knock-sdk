@@ -21,7 +21,7 @@
       "vitest/globals"
     ],
     "paths": {
-      "knockai": [
+      "@knock-ai/sdk": [
         "./src/core/index.ts"
       ]
     },

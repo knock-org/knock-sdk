@@ -1,13 +1,13 @@
 # Vue 3 (and Nuxt)
 
-Import from `knockai/vue`: `KnockPlugin`, `useKnock`, `KnockButton`, `KNOCK`.
+Import from `@knock-ai/sdk/vue`: `KnockPlugin`, `useKnock`, `KnockButton`, `KNOCK`.
 
 ## Initialize: Vue with Vite
 
 In `src/main.ts` (or `.js`):
 
 ```ts
-import { KnockPlugin } from 'knockai/vue';
+import { KnockPlugin } from '@knock-ai/sdk/vue';
 
 const knockTagId = import.meta.env.VITE_KNOCK_PRODUCT_TAG_ID;
 const app = createApp(App);
@@ -32,7 +32,7 @@ A client-only plugin, in the app's `plugins/` directory (`app/plugins/` in Nuxt 
 
 ```ts
 // plugins/knock.client.ts
-import { KnockPlugin } from 'knockai/vue';
+import { KnockPlugin } from '@knock-ai/sdk/vue';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const tagId = useRuntimeConfig().public.knockProductTagId;

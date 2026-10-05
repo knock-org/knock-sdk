@@ -45,7 +45,7 @@ Update every place the policy is defined (development and production, a
    nothing else the site loads breaks. If there's no `default-src` either, that type isn't
    restricted: don't add the directive.
 3. **Nonce-only `script-src`** (scripts allowed by `'nonce-...'` and no host list): add
-   `'strict-dynamic'` so the script that `knockai` adds to the page can load. Show it in the plan:
+   `'strict-dynamic'` so the script that the SDK adds to the page can load. Show it in the plan:
    it changes how that directive treats host lists.
 4. **`style-src` with a nonce or a hash:** browsers ignore `'unsafe-inline'` there, so Knock's
    inline styles would be blocked. Don't weaken the policy yourself. Flag it in the report.

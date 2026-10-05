@@ -62,7 +62,7 @@ under React's StrictMode. It needs an email on every render, so the inner compon
 once there is one:
 
 ```tsx
-import { useKnockIdentify } from 'knockai/react';
+import { useKnockIdentify } from '@knock-ai/sdk/react';
 import { useUser } from '@clerk/clerk-react'; // the app's own auth hook
 
 export function KnockIdentify() {
@@ -109,7 +109,7 @@ In the component where the user is known (often `App.vue`), inside `<script setu
 
 ```ts
 import { watch } from 'vue';
-import { useKnock } from 'knockai/vue';
+import { useKnock } from '@knock-ai/sdk/vue';
 
 const knock = useKnock();
 const auth = useAuthStore(); // the app's own store or composable
@@ -124,13 +124,13 @@ watch(
 ```
 
 `useKnock()` only works inside `setup()`. Elsewhere (a Pinia store, a router guard), use
-`import { knock } from 'knockai'`. It's the same object.
+`import { knock } from '@knock-ai/sdk'`. It's the same object.
 
 ## Angular
 
 ```ts
 import { inject } from '@angular/core';
-import { KNOCK } from 'knockai/angular';
+import { KNOCK } from '@knock-ai/sdk/angular';
 
 private readonly knock = inject(KNOCK);
 ```

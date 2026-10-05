@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import type { KnockIdentifyTraits, KnockInitOptions } from 'knockai';
-import { knock } from 'knockai';
+import type { KnockIdentifyTraits, KnockInitOptions } from '@knock-ai/sdk';
+import { knock } from '@knock-ai/sdk';
 import { KnockContext } from './context.js';
 
 export interface KnockProviderUser {
@@ -18,7 +18,7 @@ export function KnockProvider({ user, children, ...initOptions }: KnockProviderP
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
-    // init runs once; later prop changes are intentionally ignored (matches knockai's init contract).
+    // init runs once; later prop changes are intentionally ignored (matches `knock.init`'s contract).
     knock.init(initOptions);
   }, []);
 

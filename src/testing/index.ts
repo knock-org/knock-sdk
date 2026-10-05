@@ -1,12 +1,12 @@
 /**
- * In-memory test double for the `knockai` facade. Zero DOM access — every method
+ * In-memory test double for the `@knock-ai/sdk` facade. Zero DOM access — every method
  * just records what was called so tests can assert on it.
  *
  * `installKnockMock`/`uninstallKnockMock` expect `../core` to export
  * `__setKnockForTesting(sdk: KnockSDK | undefined): void`, a test-only hook the
  * framework bindings resolve their singleton through.
  */
-import { __setKnockForTesting } from 'knockai';
+import { __setKnockForTesting } from '@knock-ai/sdk';
 import type {
   KnockEventMap,
   KnockEventName,

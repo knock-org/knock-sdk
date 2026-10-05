@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import * as core from 'knockai';
+import * as core from '@knock-ai/sdk';
 import { createKnockMock, installKnockMock, uninstallKnockMock } from './index.js';
 
 describe('createKnockMock', () => {

@@ -5,11 +5,11 @@ No framework needed. `knock` works from any stack.
 ## npm
 
 ```bash
-npm install knockai
+npm install @knock-ai/sdk
 ```
 
 ```ts
-import { knock } from 'knockai';
+import { knock } from '@knock-ai/sdk';
 
 knock.init({ tagId: 'YOUR_TAG_ID' });
 knock.identify({ email: user.email });

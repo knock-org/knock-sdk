@@ -1,6 +1,6 @@
 {
-  "name": "knockai",
-  "version": "0.1.1",
+  "name": "@knock-ai/sdk",
+  "version": "0.1.2",
   "description": "Knock AI SDK \u2014 identify people, send events and open the Knock widget from your website or your logged-in app. Zero dependencies.",
   "license": "MIT",
   "homepage": "https://knock-ai.com",
@@ -119,6 +119,9 @@
   "engines": {
     "node": ">=14"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "browserslist": [
     "> 0.5%",
     "last 2 versions",
@@ -170,7 +173,7 @@
   },
   "size-limit": [
     {
-      "name": "core (knockai)",
+      "name": "core (@knock-ai/sdk)",
       "path": "dist/index.js",
       "limit": "1.7 kB",
       "gzip": true
@@ -181,7 +184,7 @@
       "limit": "700 B",
       "gzip": true,
       "ignore": [
-        "knockai",
+        "@knock-ai/sdk",
         "react"
       ]
     },
@@ -191,7 +194,7 @@
       "limit": "0.6 kB",
       "gzip": true,
       "ignore": [
-        "knockai",
+        "@knock-ai/sdk",
         "vue"
       ]
     },
@@ -201,7 +204,7 @@
       "limit": "0.8 kB",
       "gzip": true,
       "ignore": [
-        "knockai",
+        "@knock-ai/sdk",
         "@angular/core",
         "rxjs"
       ]
@@ -215,7 +218,7 @@
     {
       "name": "snippet (CDN stub)",
       "path": "dist/snippet.js",
-      "limit": "600 B",
+      "limit": "608 B",
       "gzip": true
     },
     {

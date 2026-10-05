@@ -1,10 +1,10 @@
 ---
 name: Bug report
-about: Something in knockai misbehaves
+about: Something in @knock-ai/sdk misbehaves
 labels: bug
 ---
 
-**Version**: `knockai@x.y.z` · **Install**: npm / CDN snippet · **Framework**: React / Vue / Angular / vanilla
+**Version**: `@knock-ai/sdk@x.y.z` · **Install**: npm / CDN snippet · **Framework**: React / Vue / Angular / vanilla
 
 **What happened**
 

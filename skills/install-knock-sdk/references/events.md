@@ -80,7 +80,7 @@ wrap calls in a tag-id check.
 component, the call in the handler.
 
 ```tsx
-import { useKnock } from 'knockai/react';
+import { useKnock } from '@knock-ai/sdk/react';
 
 export function UpgradeButton({ plan }: { plan: string }) {
   const knock = useKnock();
@@ -96,16 +96,16 @@ export function UpgradeButton({ plan }: { plan: string }) {
 
 Not in the render body, and not in a `useEffect` that runs on mount: StrictMode runs effects twice
 in development. `useKnock()` works outside `KnockProvider` too. In code that isn't a component (a
-store, a thunk, an API client), use `import { knock } from 'knockai'`: it's the same object.
+store, a thunk, an API client), use `import { knock } from '@knock-ai/sdk'`: it's the same object.
 
 **Next.js server code.** On the server `track()` does nothing. For a server action or an API route,
 track in the client component that called it, once the result says it worked.
 
 **Vue**: `const knock = useKnock()` in `<script setup>`, then the call in the handler. An event
 binding is fine too: `@click="knock.track('upgrade_clicked')"`. Not in a computed value or a watcher
-that runs on load. In a Pinia store or a router guard, use `import { knock } from 'knockai'`.
+that runs on load. In a Pinia store or a router guard, use `import { knock } from '@knock-ai/sdk'`.
 
-**Angular**: `inject(KNOCK)` (with `KNOCK` from `knockai/angular`) in the component or service.
+**Angular**: `inject(KNOCK)` (with `KNOCK` from `@knock-ai/sdk/angular`) in the component or service.
 Call it in the handler method, or in the success callback of the existing request:
 
 ```ts
@@ -118,7 +118,7 @@ this.knock.track('project_created', { template: template.id });
 An event binding such as `(click)="knock.track('upgrade_clicked')"` is fine. A getter or template
 expression that runs on every change detection is not.
 
-**Plain JavaScript (npm)**: `import { knock } from 'knockai'`, then `knock.track(...)` in the
+**Plain JavaScript (npm)**: `import { knock } from '@knock-ai/sdk'`, then `knock.track(...)` in the
 handler.
 
 **HTML pages (CDN)**: `knockai.track(...)` in the handler, in a script after the element it

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import type { KnockSDK } from 'knockai';
-import { knock } from 'knockai';
+import type { KnockSDK } from '@knock-ai/sdk';
+import { knock } from '@knock-ai/sdk';
 import { KnockContext } from './context.js';
 
 export function useKnock(): KnockSDK {

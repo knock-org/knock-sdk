@@ -1,11 +1,11 @@
 # React
 
 ```bash
-npm install knockai
+npm install @knock-ai/sdk
 ```
 
 ```tsx
-import { KnockProvider } from 'knockai/react';
+import { KnockProvider } from '@knock-ai/sdk/react';
 
 function App() {
   return (
@@ -30,7 +30,7 @@ Pass `user` to identify the signed-in person. It calls `identify()` again whenev
 
 ```tsx
 import { useEffect } from 'react';
-import { useKnock, useKnockEvent, useKnockIdentify } from 'knockai/react';
+import { useKnock, useKnockEvent, useKnockIdentify } from '@knock-ai/sdk/react';
 
 function Dashboard({ user }) {
   const knock = useKnock();
@@ -45,7 +45,7 @@ function Dashboard({ user }) {
 }
 ```
 
-- `useKnock()` returns the same `knock` you'd get from `import { knock } from 'knockai'`. It works
+- `useKnock()` returns the same `knock` you'd get from `import { knock } from '@knock-ai/sdk'`. It works
   outside a `KnockProvider` too.
 - `useKnockIdentify(traits)` calls `identify()` on mount and again whenever the traits change.
 - `useKnockEvent(event, handler)` listens to a Knock event while the component is mounted. See
@@ -56,7 +56,7 @@ You don't need to wait for the SDK to be ready. Calls made before then are queue
 ## `KnockButton`
 
 ```tsx
-import { KnockButton } from 'knockai/react';
+import { KnockButton } from '@knock-ai/sdk/react';
 
 <KnockButton magicLinkId="a1b2c3" email={user.email}>
   Book a demo
@@ -69,12 +69,12 @@ accepts any other `<button>` props. See [Scheduling modal and widget](../widget-
 
 ## Next.js
 
-`knockai/react` is marked `'use client'`, so you can render `KnockProvider` from an App Router
+`@knock-ai/sdk/react` is marked `'use client'`, so you can render `KnockProvider` from an App Router
 server component, such as your root layout:
 
 ```tsx
 // app/layout.tsx
-import { KnockProvider } from 'knockai/react';
+import { KnockProvider } from '@knock-ai/sdk/react';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -92,11 +92,11 @@ the server every SDK call does nothing.
 
 ## Testing
 
-`knockai/testing` gives you an in-memory stand-in that records every call instead of loading
+`@knock-ai/sdk/testing` gives you an in-memory stand-in that records every call instead of loading
 anything:
 
 ```tsx
-import { createKnockMock, installKnockMock, uninstallKnockMock, type KnockMock } from 'knockai/testing';
+import { createKnockMock, installKnockMock, uninstallKnockMock, type KnockMock } from '@knock-ai/sdk/testing';
 
 let knock: KnockMock;
 
@@ -113,7 +113,7 @@ it('identifies the signed-in user', () => {
 });
 ```
 
-While it's installed, `knock` from `knockai` and every framework binding use the mock. It also
+While it's installed, `knock` from `@knock-ai/sdk` and every framework binding use the mock. It also
 has `calls`, `eventsNamed(name)`, `emit(event, payload)` and `clearCalls()`. It works the same with
 Vue, Angular and plain JavaScript, in Vitest or Jest.
 

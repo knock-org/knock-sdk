@@ -17,7 +17,7 @@ const { knock } = vi.hoisted(() => ({
 
 vi.mock('../../core', () => ({ knock }));
 
-import type { KnockIdentifyTraits } from 'knockai';
+import type { KnockIdentifyTraits } from '@knock-ai/sdk';
 import { useKnockIdentify } from './useKnockIdentify.js';
 
 beforeEach(() => {

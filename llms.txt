@@ -1,16 +1,17 @@
-# knockai
+# @knock-ai/sdk
 
 > The Knock AI SDK for marketing sites and logged-in apps: identify people, track events, and open
-> the Knock scheduling modal. npm package: `knockai`. Zero dependencies, core ≤ 1.7 KB gzip, safe to
-> import on the server.
+> the Knock scheduling modal. npm package: `@knock-ai/sdk` (formerly `knockai`, same API). Zero
+> dependencies, core ≤ 1.7 KB gzip, safe to import on the server.
 
 ## Install
 
-npm: `npm install knockai`, then `import { knock } from 'knockai'`.
+npm: `npm install @knock-ai/sdk`, then `import { knock } from '@knock-ai/sdk'`.
 No build step: paste the CDN snippet from README.md ("CDN (no build step)") into `<head>`, once. It
 defines the same API on `window.knock` (and on `window.knockai`, for pages that already use `knock`).
 
-Framework bindings: `knockai/react`, `knockai/vue`, `knockai/angular`. Test mock: `knockai/testing`.
+Framework bindings: `@knock-ai/sdk/react`, `@knock-ai/sdk/vue`, `@knock-ai/sdk/angular`. Test mock:
+`@knock-ai/sdk/testing`.
 With an AI coding agent: `npx skills add knock-org/knock-sdk` installs the install skill for the
 agents it detects (`-a <agent>` to choose). Then ask the agent to install the Knock SDK (in Claude
 Code, `/install-knock-sdk`; in Codex, `$install-knock-sdk`). An agent without skills support can
@@ -21,7 +22,7 @@ directly.
 ## Minimum working integration
 
 ```ts
-import { knock } from 'knockai';
+import { knock } from '@knock-ai/sdk';
 
 knock.init({ tagId: 'YOUR_TAG_ID' }); // website tag id on a marketing site; product tag id in a logged-in app
 

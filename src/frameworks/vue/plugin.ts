@@ -1,6 +1,6 @@
 import type { App } from 'vue';
-import type { KnockInitOptions } from 'knockai';
-import { knock } from 'knockai';
+import type { KnockInitOptions } from '@knock-ai/sdk';
+import { knock } from '@knock-ai/sdk';
 import { KNOCK } from './inject-key.js';
 
 // Structural shape only (not Vue's `Plugin<T>` type) so app.use()'s generic

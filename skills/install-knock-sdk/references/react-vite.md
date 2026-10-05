@@ -1,6 +1,6 @@
 # React (Vite, Create React App, React Router)
 
-Import from `knockai/react`: `KnockProvider`, `useKnock`, `useKnockIdentify`, `useKnockEvent`,
+Import from `@knock-ai/sdk/react`: `KnockProvider`, `useKnock`, `useKnockIdentify`, `useKnockEvent`,
 `KnockButton`.
 
 ## Initialize: wrap the app once
@@ -9,7 +9,7 @@ Import from `knockai/react`: `KnockProvider`, `useKnock`, `useKnockIdentify`, `u
 renders:
 
 ```tsx
-import { KnockProvider } from 'knockai/react';
+import { KnockProvider } from '@knock-ai/sdk/react';
 
 const knockTagId = import.meta.env.VITE_KNOCK_PRODUCT_TAG_ID;
 if (!knockTagId && import.meta.env.DEV) console.warn('VITE_KNOCK_PRODUCT_TAG_ID is not set, so Knock is off');

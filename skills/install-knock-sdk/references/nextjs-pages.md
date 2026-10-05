@@ -7,7 +7,7 @@ such as a `SessionProvider`.
 
 ```tsx
 import type { AppProps } from 'next/app';
-import { KnockProvider } from 'knockai/react';
+import { KnockProvider } from '@knock-ai/sdk/react';
 
 const knockTagId = process.env.NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID;
 if (!knockTagId && process.env.NODE_ENV === 'development') console.warn('NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID is not set, so Knock is off');

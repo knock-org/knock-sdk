@@ -25,17 +25,18 @@ for (const file of FILES) {
 }
 
 // Hand-written jsDelivr links (docs, examples, the install skill) must pin the range the stub loads.
-const range = stub.match(/npm\/knockai@([^/]+)\//)[1];
-const pinned = /cdn\.jsdelivr\.net\/npm\/knockai@[^/"'\s]+\//g;
+// Links to the old package name (knockai) count as stale too.
+const range = stub.match(/npm\/@knock-ai\/sdk@([^/]+)\//)[1];
+const pinned = /cdn\.jsdelivr\.net\/npm\/(?:knockai|@knock-ai\/sdk)@[^/"'\s]+\//g;
 const linked = ['docs', 'examples', 'skills'].flatMap((dir) =>
   readdirSync(dir, { recursive: true }).filter((f) => /\.(md|html)$/.test(f)).map((f) => join(dir, f)),
 );
 for (const file of ['README.md', 'llms.txt', ...linked]) {
   const src = readFileSync(file, 'utf8');
-  const next = src.replace(pinned, `cdn.jsdelivr.net/npm/knockai@${range}/`);
+  const next = src.replace(pinned, `cdn.jsdelivr.net/npm/@knock-ai/sdk@${range}/`);
   if (next === src) continue;
   stale++;
   if (!check) writeFileSync(file, next);
-  console.log(`${check ? 'stale' : 'updated'}: ${file} (jsDelivr range must be knockai@${range})`);
+  console.log(`${check ? 'stale' : 'updated'}: ${file} (jsDelivr range must be @knock-ai/sdk@${range})`);
 }
 if (check && stale) process.exit(1);

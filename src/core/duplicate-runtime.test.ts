@@ -67,6 +67,19 @@ describe('duplicate runtime handling', () => {
     expect(runtimeScripts()).toHaveLength(1);
   });
 
+  it('loads its own tag on a knock-ai.com site whose app scripts are not Knock tags', () => {
+    pasteTag('https://dashboard.knock-ai.com/_next/static/chunks/main-app.js');
+    pasteTag('https://www.knock-ai.com/assets/index.js');
+    sdk.init({ tagId: 'tag_1' });
+    expect(document.getElementById('knockai-runtime')).not.toBeNull();
+  });
+
+  it('recognises the staging hosted snippet as an existing tag', () => {
+    pasteTag('https://js.stg.knock-ai.com/tag_1.js');
+    sdk.init({ tagId: 'tag_1' });
+    expect(document.getElementById('knockai-runtime')).toBeNull();
+  });
+
   it('warns once when the page already runs a different Knock tag, and uses it', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     window.Knock = fakeRuntime();

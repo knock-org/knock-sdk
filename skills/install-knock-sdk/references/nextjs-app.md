@@ -32,8 +32,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 - If the layout already wraps `children` in a client `Providers` component, `KnockProvider` can go
   inside that instead.
 - `useKnock`, `useKnockIdentify` and `useKnockEvent` only work in files that start with
-  `'use client'`. `KnockButton` can be rendered from a server component, as long as you pass it no
-  event handlers.
+  `'use client'`. `KnockButton` and `KnockLink` can be rendered from a server component, as long as
+  you pass them no event handlers.
 
 ## Identify
 

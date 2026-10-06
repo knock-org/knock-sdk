@@ -43,6 +43,9 @@ const PATHS = [
     return () => (off ? off() : void (call[0] = ''));
   };
 
+  // Synchronous, so never queued: before the facade loads, the link goes out as it is.
+  stub['wrapLink'] = (url: unknown) => url;
+
   stub['scheduling'] = {
     load(...args: unknown[]): KnockSchedulingHandle {
       let real: KnockSchedulingHandle | undefined;

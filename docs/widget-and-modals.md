@@ -66,6 +66,9 @@ scheduling modal, and links to your Knock modal URLs (`https://login.start-chat.
 open in the modal instead of leaving the page. Your product tag doesn't do this. In your app, use a
 button or `knock.modal.open()`.
 
+To keep the visitor's identity on your own links to Knock chat, use `KnockLink` or
+`knock.wrapLink()`: see [Links to Knock](links.md).
+
 ## The widget
 
 If you show Knock's floating widget, you can control it:

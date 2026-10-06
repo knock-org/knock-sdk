@@ -59,6 +59,8 @@ test('tracks the upgrade event', () => {
   as if the SDK had emitted it (`ready`, `modal:open`, …).
 - `mock.clearCalls()` — clears `mock.calls`; subscriptions registered with `mock.on` stay
   active.
+- `mock.wrapLink(url)` — returns `url` unchanged and records the call, so a test of a link
+  (`KnockLink`, or your own click handler) can assert it was wrapped.
 - `installKnockMock(mock)` / `uninstallKnockMock()` — swap the singleton the
   `@knock-ai/sdk/react`, `@knock-ai/sdk/vue` and `@knock-ai/sdk/angular` bindings resolve `knock`
   through, so components under test talk to the mock instead of the real SDK.

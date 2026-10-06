@@ -1,6 +1,6 @@
 ---
 name: install-knock-sdk
-description: "Installs the Knock AI SDK (@knock-ai/sdk, formerly knockai, which loads the Knock tag) in a web project: React, Next.js, Vue, Nuxt, Angular, plain JavaScript or HTML pages. Use it when the user asks to install, add or set up Knock, Knock AI, @knock-ai/sdk, knockai, the Knock SDK or the Knock tag in their site or app, or to move from knockai to @knock-ai/sdk, and not for anything else. It first says what it will do and waits for a yes. Then it looks through the project, suggests events to track, asks for the Knock tag id, installs @knock-ai/sdk, adds the setup, identify and track() calls, updates the Content-Security-Policy if there is one, and runs the build. @knocklabs packages are a different company's product: this skill isn't for them."
+description: "Installs the Knock AI SDK (@knock-ai/sdk, formerly knockai, which loads the Knock tag) in a web project: React, Next.js, Vue, Nuxt, Angular, plain JavaScript or HTML pages. Use it when the user asks to install, add or set up Knock, Knock AI, @knock-ai/sdk, knockai, the Knock SDK or the Knock tag in their site or app, or to move from knockai to @knock-ai/sdk, and not for anything else. It first says what it will do and waits for a yes. Then it looks through the project, suggests events to track, asks for the Knock tag id, installs @knock-ai/sdk, adds the setup, identify and track() calls, keeps the visitor's identity on links to Knock chat if the user wants, updates the Content-Security-Policy if there is one, and runs the build. @knocklabs packages are a different company's product: this skill isn't for them."
 license: MIT
 compatibility: "Web projects: React, Next.js, Vue, Nuxt, Angular, plain JavaScript or HTML pages. For any coding agent that can read files and run shell commands. Installing from npm needs network access."
 metadata:
@@ -11,7 +11,7 @@ metadata:
 
 Add `@knock-ai/sdk` to this project so it loads the user's Knock tag, tells Knock who people are,
 records the actions they pick and, if they want, opens their Knock scheduling modal. Read this whole
-file before you start, to its last line: it's about 470 lines, and the plan and report formats are
+file before you start, to its last line: it's about 490 lines, and the plan and report formats are
 in steps 3 and 7, near the end. Then work through the steps in order. Open a file in `references/`
 only when a step sends you there. If you're reading this from a URL, its links are relative to
 that URL.
@@ -35,10 +35,10 @@ that URL.
   accept "1, 3" style replies. Ids (tag id, magic link id) are always pasted as plain text in chat,
   never offered as options.
 - **The request may already answer.** As `key=value` (`website=<id>`, `product=<id>`, `app=<path>`,
-  `events=signed_up,plan_upgraded` or `events=none`, `split=yes`; square brackets around one are
-  fine) or in plain sentences ("it's our marketing site", "the app is under /app", "no demo
-  button"). Use those answers and don't ask again. An unfilled placeholder such as `<tag-id>` is not
-  an answer.
+  `events=signed_up,plan_upgraded` or `events=none`, `split=yes`, `links=yes` or `links=no`; square
+  brackets around one are fine) or in plain sentences ("it's our marketing site", "the app is under
+  /app", "no demo button"). Use those answers and don't ask again. An unfilled placeholder such as
+  `<tag-id>` is not an answer.
 - **Never invent ids.** Tag ids and magic link ids come from the user, or from an existing install
   ([Already installed](#already-installed)). Never write a placeholder such as `YOUR_TAG_ID` into
   their code. No tag id, no install: ask for it, or stop if you can't ask.
@@ -69,7 +69,8 @@ that URL.
   the signed-in user. On a marketing site, only where a visitor submits their email. Never on an
   anonymous page load.
 - **Use only the real API.** `init`, `identify`, `track`, `modal`, `scheduling`, `widget`, `on`,
-  and the read-only `ready`, `version` and `surface`. There's no sign-out or reset call to add.
+  `wrapLink`, and the read-only `ready`, `version` and `surface`; in React also `KnockLink`. There's
+  no sign-out or reset call to add.
 - **Re-running is safe.** Detect what's already installed and only fill the gaps
   ([Already installed](#already-installed)). Running this on a finished install changes nothing.
 - **The installed package wins.** After installing, the types in
@@ -179,6 +180,13 @@ set as exclude globs.
     ([names and properties](references/events.md#names)). Mark the 3 to 5 most valuable as
     recommended. Leave out actions with no handler in this code (a hosted sign-up page, a
     third-party widget), and mark the ones already tracked.
+11. **Links to Knock.** Search for `start-chat\.com`: it finds links to Knock chat on
+    `start-chat.com`, `login.start-chat.com` and their `stg.` variants. Note each one a visitor
+    opens in the browser, as `path:line`: an `<a href>` (or a `next/link` `<Link>`), or a
+    `window.open(...)`. For a URL kept in a constant or config, note where it's opened. Leave out
+    URLs in server code, emails, tests and the Content-Security-Policy, and mark links already
+    using `KnockLink` or `wrapLink(` as done. In a codebase that's both a marketing site and an
+    app, note which part each link is in.
 
 ## 2. Ask which events to track, and what's still open
 
@@ -188,8 +196,8 @@ land in the same diff) or stop. Without git, say there won't be a diff to review
 
 Then ask in two rounds. Skip any question the request or the install already answered.
 
-**Round 1: one question-tool call with these four questions** (as numbered options in chat without
-a tool):
+**Round 1: one question-tool call with these questions** (as numbered options in chat without a
+tool):
 
 1. **Events** (header `Events`, multi-select). The question: "Which events should I track?" One
    option per candidate, strongest first, at most 4: the label is the event name, with
@@ -213,16 +221,27 @@ a tool):
    **No** (Recommended), **Yes, my default modal**, **Yes, for a magic link**. If yes, the
    description says which existing button you'd wire, or where you'd add one. See
    [demo-button.md](references/demo-button.md).
+5. **Links** (header `Links`), only when step 1 found links to Knock that aren't done in the
+   logged-in app's code (with Both, only the app's part). On a marketing site the website tag
+   already adds the visitor's identity to these links by itself: don't ask, and list them under
+   Already there with "your website tag adds it". "Keep visitor identity on N links to Knock
+   chat?" Options: **Yes** (Recommended), described as "adds the visitor's identity when a link is
+   opened, so Knock connects the chat to them", then the `path:line`s (the first three, then "+N
+   more"); **No**, "leave the links as they are". If `@knock-ai/sdk` below 0.1.3 is already
+   installed, don't ask: list the links under Skipped with "needs @knock-ai/sdk 0.1.3 or later".
+   Round 1 holds at most 4 questions, so when all four above are asked too, ask this one in a
+   second question-tool call right after.
 
 If the app-type answer contradicts what question 3 assumed, ask question 3 again for the right
-type.
+type. Likewise, ask question 5 or drop it so it covers only the logged-in app's links.
 
 **Round 2: in chat, plain text.** "Paste your Knock product tag id" (or website, or both, from
 round 1), plus the magic link id if they chose one. Take only what the user pastes: one token, with
 no spaces or quotes. Don't say where to find it. If they don't have it yet, stop. Tell them to ask
 their agent to install the Knock SDK again once they have it (in Claude Code `/install-knock-sdk`,
-in Codex `$install-knock-sdk`), with their answers so far:
-`Install the Knock SDK. Yes: product=<tag-id> events=signed_up,plan_upgraded`.
+in Codex `$install-knock-sdk`), with their answers so far, including `links=yes` or `links=no`
+if they answered Links:
+`Install the Knock SDK. Yes: product=<tag-id> events=signed_up,plan_upgraded links=yes`.
 
 ### If you can't ask
 
@@ -230,8 +249,9 @@ With no way to get a reply (a non-interactive run), work from the request and th
 
 - No clear yes in the request: step 0 already stopped.
 - No tag id (given or stored), or a monorepo with several apps and no `app=`: stop and change
-  nothing. Print a request that would work, with the events you found:
-  `Install the Knock SDK. Yes: product=<tag-id> app=apps/web events=signed_up,plan_upgraded`.
+  nothing. Print a request that would work, with the events you found, and `links=yes` when step 1
+  found links to Knock in the logged-in app's code:
+  `Install the Knock SDK. Yes: product=<tag-id> app=apps/web events=signed_up,plan_upgraded links=yes`.
 - Both tags and one shared root: see [One codebase, both tags](#one-codebase-both-tags).
 - A stored tag id that differs from the request's: stop and change nothing
   ([Already installed](#already-installed)).
@@ -240,7 +260,8 @@ With no way to get a reply (a non-interactive run), work from the request and th
 - Track only the events the request names that you found a place for. With none named, add none,
   and list your suggestions under Skipped in the report.
 - Identify only if there's exactly one clear source of the signed-in user. Add the button only if
-  the request asks for it.
+  the request asks for it, and change links to Knock only if the request asks for that
+  (`links=yes`), and only in the logged-in app's code.
 - List everything you skipped in the report.
 
 ### Already installed
@@ -261,6 +282,8 @@ What the existing install shows counts as answered:
 - **Events.** An event already tracked (a `track('name'` call) is done: list it under Already
   there, and never add a second call for it.
 - **The button.** An existing `KnockButton` or `modal.open(...)` call answers it.
+- **Links.** A link to Knock that already uses `KnockLink` or `wrapLink(` is done: list it under
+  Already there.
 - **The package.** If `@knock-ai/sdk` is already in the app's dependencies, don't run the install
   command, which could upgrade it. Keep its version and report it. If `knockai` is there instead,
   that's the old name: the plan swaps it (step 3), and everything else it shows still counts.
@@ -297,6 +320,8 @@ Plan for apps/web
   app/knock-identify.tsx    new: identifies the signed-in user from useUser()
   app/signup/form.tsx       track signed_up { method }
   app/billing/upgrade.tsx   track plan_upgraded { plan, interval }
+  app/pricing/page.tsx:42   link to Knock chat: <a> -> <KnockLink>, same props
+  lib/support.ts:18         link to Knock chat: window.open(knock.wrapLink(url))
   next.config.ts            add Knock's sources to the Content-Security-Policy
 ```
 
@@ -362,6 +387,8 @@ Follow the recipe. They all use the same pieces:
   Angular `inject(KNOCK)`, other code `import { knock } from '@knock-ai/sdk'`, HTML pages `knockai`
   (the global the snippet defines). These
   work while Knock is off (no tag id set): the call just isn't sent, so it needs no guard.
+- **Links to Knock**, if the user said yes: change each one as in [links.md](references/links.md),
+  when it's opened, never when it renders.
 - **No readiness checks.** Calls made before `init()`, or before Knock has loaded, are queued (up to
   1,000) and sent in order.
 - **Server rendering is safe.** On the server every call does nothing (so a `track()` there is
@@ -399,7 +426,7 @@ condense it, turn it into prose or links, or leave out a section: write `none` u
 Anything else you need to say goes inside it, under Skipped or Before you merge, not after it.
 
 ```text
-Knock AI SDK installed in apps/web: @knock-ai/sdk 0.1.2, with pnpm
+Knock AI SDK installed in apps/web: @knock-ai/sdk 0.1.3, with pnpm
 Checks: typecheck passed, build passed, no lint script
 
 Changed
@@ -407,6 +434,7 @@ Changed
   app/knock-identify.tsx:1        new: identifies the signed-in user (Clerk)
   .env.local                      + NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID
   .env.example:4                  + NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID=
+  app/pricing/page.tsx:42         link to Knock chat keeps the visitor's identity (KnockLink)
   package.json, pnpm-lock.yaml    + @knock-ai/sdk
 Moved
   none
@@ -427,6 +455,7 @@ Check it in your browser
      (blocked:orb) in Chrome, means the tag id is wrong. Nothing is printed in the Console for that.
   3. In the Console: no "[knockai]" warnings and no Content-Security-Policy errors.
   4. Do each tracked action once (sign up, upgrade): it works as before, with no new errors.
+  5. Open the Pricing page's chat link: the address it opens has UID= in it.
 
 Before you merge
   - Set NEXT_PUBLIC_KNOCK_PRODUCT_TAG_ID wherever production builds run. Without it, Knock is off.
@@ -440,13 +469,15 @@ Before you merge
   and a new one.
 - **Events added**: the table, header row included: name, `file:line`, properties (`-` for none).
 - **Already there**: what you found and kept: the package and its version, the setup, env vars,
-  identify, and each event already tracked, with its `file:line`.
+  identify, each event already tracked, and each link to Knock that's done or on the marketing
+  site ("your website tag adds it"), with its `file:line`.
 - **A re-run that changes nothing**: the first line is
-  `Knock AI SDK already installed in apps/web: @knock-ai/sdk 0.1.2. Nothing changed.`, Changed is
+  `Knock AI SDK already installed in apps/web: @knock-ai/sdk 0.1.3. Nothing changed.`, Changed is
   `Nothing changed`, Moved and Events added are `none`, and everything goes under Already there.
   Never say added or installed about something that was already there.
 - **Check it in your browser**: the steps as written, with the app's own dev command, routes and
-  actions filled in. Keep step 2's 403 and `(blocked:orb)` explanation.
+  actions filled in. Keep step 2's 403 and `(blocked:orb)` explanation. Step 5 only when you
+  changed links to Knock: name one of them. Its `UID=` appears once the Knock tag has loaded.
 - **Before you merge** also lists any uncommitted changes that were there before you started, left
   untouched. After a route-group split, it also says that a URL matching no page now shows
   Next.js's default 404 page, without either layout.

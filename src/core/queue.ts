@@ -8,7 +8,7 @@ export interface DeferredSchedulingHandle extends KnockSchedulingHandle {
   attach(real: KnockSchedulingHandle): void;
 }
 
-/** Dotted path into `window.Knock` (`identify`, `modal.open`, `widget.show`, …). */
+/** Dotted path into `window.Knock` (`identify`, `modal.open`, `widget.show`, …). `wrapLink` is only ever live, never queued. */
 export type RuntimePath =
   | 'identify'
   | 'track'
@@ -18,7 +18,8 @@ export type RuntimePath =
   | 'widget.show'
   | 'widget.hide'
   | 'widget.open'
-  | 'widget.close';
+  | 'widget.close'
+  | 'wrapLink';
 
 export interface QueuedCommand {
   path: RuntimePath;

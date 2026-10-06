@@ -9,6 +9,7 @@ type Stub = {
   modal: { open: (o: object) => void };
   on: (event: string, handler: () => void) => () => void;
   scheduling: { load: (o: KnockSchedulingLoadOptions) => KnockSchedulingHandle };
+  wrapLink: (url: string) => string;
 };
 
 function fakeHandle(log: string[] = []) {
@@ -46,6 +47,27 @@ describe('CDN stub + IIFE facade', () => {
       ['modal.open', [{ magicLinkId: 'm1' }]],
     ]);
     expect(document.head.querySelector('script')?.src).toContain('knockai.iife.js');
+  });
+
+  it('wrapLink returns the url unchanged before the facade loads, and queues nothing', async () => {
+    await import('./snippet.js');
+    const stub = window.knock as Stub;
+    const url = 'https://start-chat.com/slack/acme/sales';
+    expect(stub.wrapLink(url)).toBe(url);
+    expect(stub.q).toEqual([]);
+  });
+
+  it("wrapLink is the facade's once it loads, and wraps once the Knock tag is ready", async () => {
+    await import('./snippet.js');
+    (window.knock as Stub).init({ tagId: 'tag_1' });
+    const url = 'https://start-chat.com/slack/acme/sales';
+
+    const { default: knock } = await import('./iife.js');
+    expect((window.knockai as Stub).wrapLink(url)).toBe(url);
+
+    knockReady({ identify: vi.fn(), scheduling: { load: vi.fn() }, wrapLink: (u) => `${u}?UID=visitor-1` });
+    expect((window.knockai as Stub).wrapLink(url)).toBe(`${url}?UID=visitor-1`);
+    expect(knock.wrapLink(url)).toBe(`${url}?UID=visitor-1`);
   });
 
   it('facade replays the stub queue in order and replaces both globals', async () => {

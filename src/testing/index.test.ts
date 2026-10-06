@@ -67,6 +67,14 @@ describe('createKnockMock', () => {
     ]);
   });
 
+  it('wrapLink returns the url unchanged and records the call', () => {
+    const mock = createKnockMock();
+    const url = 'https://start-chat.com/slack/acme/sales';
+
+    expect(mock.wrapLink(url)).toBe(url);
+    expect(mock.calls).toEqual([{ method: 'wrapLink', args: [url] }]);
+  });
+
   it('dispatches emitted events to on() subscribers and honors unsubscribe', () => {
     const mock = createKnockMock();
     const received: unknown[] = [];

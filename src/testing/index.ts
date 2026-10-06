@@ -33,7 +33,8 @@ export type KnockMockCall =
   | { method: 'widget.hide'; args: [] }
   | { method: 'widget.open'; args: [] }
   | { method: 'widget.close'; args: [] }
-  | { method: 'on'; args: [KnockEventName] };
+  | { method: 'on'; args: [KnockEventName] }
+  | { method: 'wrapLink'; args: [string] };
 
 export interface KnockMock extends KnockSDK {
   /** Every call made against this mock, oldest first. */
@@ -121,6 +122,11 @@ export function createKnockMock(): KnockMock {
       close(): void {
         record({ method: 'widget.close', args: [] });
       },
+    },
+
+    wrapLink(url): string {
+      record({ method: 'wrapLink', args: [url] });
+      return url;
     },
 
     clearCalls(): void {

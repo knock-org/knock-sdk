@@ -9,7 +9,7 @@ Only if you use Knock on both your marketing site and your logged-in app. Use yo
 id on the site and your product tag's id in the app.
 
 **How big is it?**
-The core is ≤ 1.7 KB gzip, with zero dependencies. Your Knock tag loads separately, once `init()`
+The core is ≤ 1.74 KB gzip, with zero dependencies. Your Knock tag loads separately, once `init()`
 runs.
 
 **Does it work with Next.js, Nuxt and other server rendering?**

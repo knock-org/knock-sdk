@@ -1,7 +1,7 @@
 # React (Vite, Create React App, React Router)
 
 Import from `@knock-ai/sdk/react`: `KnockProvider`, `useKnock`, `useKnockIdentify`, `useKnockEvent`,
-`KnockButton`.
+`KnockButton`, `KnockLink`.
 
 ## Initialize: wrap the app once
 

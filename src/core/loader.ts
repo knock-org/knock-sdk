@@ -2,8 +2,8 @@ import type { KnockEnvironment, KnockSdkBootConfig } from './types.js';
 import { tagBuildPath } from './env.js';
 
 const RUNTIME_SCRIPT_ID = 'knockai-runtime';
-/** A Knock tag the vendor already pasted: hosted snippet (js.knock-ai.com), CDN build, or self-hosted. */
-const TAG_SRC = /knock-ai\.com\/|knock-tag/;
+/** A Knock tag the vendor already pasted: hosted snippet (js.knock-ai.com), CDN build, or self-hosted; not any knock-ai.com script. */
+const TAG_SRC = /js\.(stg\.)?knock-ai\.com|knock-tag/;
 
 /** True when a Knock runtime <script> is already in the DOM (booted or still loading). */
 export function hasRuntimeScript(): boolean {

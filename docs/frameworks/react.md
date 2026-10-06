@@ -67,6 +67,23 @@ Renders a `<button>` that opens the scheduling modal on click. With a `magicLink
 loading the modal on hover or focus. Leave `magicLinkId` out to open your default Knock modal. It
 accepts any other `<button>` props. See [Scheduling modal and widget](../widget-and-modals.md).
 
+## `KnockLink`
+
+```tsx
+import { KnockLink } from '@knock-ai/sdk/react';
+
+<KnockLink href="https://start-chat.com/slack/acme/sales" target="_blank" rel="noopener">
+  Chat with sales
+</KnockLink>
+```
+
+Renders a plain `<a>` for a link to Knock chat, and adds the visitor's Knock identity when they use
+it, so Knock can connect the chat to them. The `href` is rendered as it is: server rendering gives
+the same HTML and nothing re-renders when Knock loads. The link goes back to your `href` once it
+is opened, and a right-click or a long-press always shows your `href`, so a copied link stays
+clean. It accepts any other `<a>` props and a `ref`, and runs your own handlers first. See
+[Links to Knock](../links.md).
+
 ## Next.js
 
 `@knock-ai/sdk/react` is marked `'use client'`, so you can render `KnockProvider` from an App Router
@@ -88,7 +105,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```
 
 Call the hooks (`useKnock`, `useKnockEvent`, `useKnockIdentify`) only from client components. On
-the server every SDK call does nothing.
+the server every SDK call does nothing. `KnockLink` can render from a server component too, with
+the props a server component can pass (no event handlers).
 
 ## Testing
 

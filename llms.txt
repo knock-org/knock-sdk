@@ -2,7 +2,7 @@
 
 > The Knock AI SDK for marketing sites and logged-in apps: identify people, track events, and open
 > the Knock scheduling modal. npm package: `@knock-ai/sdk` (formerly `knockai`, same API). Zero
-> dependencies, core ≤ 1.7 KB gzip, safe to import on the server.
+> dependencies, core ≤ 1.74 KB gzip, safe to import on the server.
 
 ## Install
 
@@ -59,8 +59,13 @@ readiness check is needed. On the server every call does nothing.
 - `on(event, handler)` returns an unsubscribe function. Events: `ready`, `modal:open`,
   `modal:close`, `widget:open`, `widget:close`, `error`. `ready` fires once; a handler added
   after that still runs, once.
+- `wrapLink(url)` returns `url` with the visitor's Knock identity added, so a Knock chat link
+  (`start-chat.com`, `login.start-chat.com`) opened from it keeps who the visitor is. Synchronous;
+  before the Knock tag is ready and on the server it returns `url` unchanged; never throws. Call it
+  when the link is opened (in a click handler, or around a `window.open` URL), not at render.
 - Read-only: `knock.ready`, `knock.version`, `knock.surface`.
-- React: `KnockProvider`, `KnockButton`, `useKnock`, `useKnockIdentify`, `useKnockEvent`. Vue:
+- React: `KnockProvider`, `KnockButton`, `KnockLink` (a plain `<a>` that calls `wrapLink` when
+  the link is opened, never at render), `useKnock`, `useKnockIdentify`, `useKnockEvent`. Vue:
   `KnockPlugin`, `useKnock`, `KnockButton`. Angular: `provideKnock`, and `inject(KNOCK)` for the SDK in components.
 
 ## Rules for an AI agent adding this SDK
@@ -76,6 +81,10 @@ readiness check is needed. On the server every call does nothing.
 - In Next.js, `KnockProvider` can render from a server component; call the hooks only from client
   components.
 - Don't change the CDN snippet's code.
+- For a raw link to Knock chat in the code: in React, swap `<a href>` for `<KnockLink href>` with
+  the same props; elsewhere, in its `click` and `auxclick` (middle-click) handlers, skip
+  `event.button > 1`, set `event.currentTarget.href = knock.wrapLink(url)`, and put `url` back with
+  `setTimeout`; wrap a `window.open` URL with `knock.wrapLink()`. Never wrap at render time.
 
 ## Docs
 
@@ -83,6 +92,7 @@ readiness check is needed. On the server every call does nothing.
 - docs/identify.md: what identify() does on each tag, traits
 - docs/events.md: track(), names, properties, limits
 - docs/widget-and-modals.md: modal.open, scheduling.load, buttons, widget, on()
+- docs/links.md: KnockLink and wrapLink(), for links to Knock chat
 - docs/frameworks/{react,vue,angular,vanilla}.md
 - docs/platforms.md: Shopify, Wix, Webflow, Framer, WordPress, AI app builders
 - docs/csp.md: Content-Security-Policy

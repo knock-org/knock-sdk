@@ -159,6 +159,14 @@ export function createKnock(): KnockSDK {
       },
     },
     widget,
+    wrapLink(url: string): string {
+      const rt = runtime();
+      try {
+        return (rt && (applyCommand(rt, { path: 'wrapLink', args: [url] }, debug) as string)) || url;
+      } catch {
+        return url;
+      }
+    },
     on<E extends KnockEventName>(event: E, handler: (payload: KnockEventMap[E]) => void): () => void {
       if (!browser()) return () => {};
       if (event !== 'ready' || !ready) return emitter.on(event, handler);

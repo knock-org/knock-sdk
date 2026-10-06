@@ -31,20 +31,21 @@ function resolve(runtime: KnockRuntime, path: string): { fn: unknown; self: unkn
   return { self, fn: self ? Reflect.get(self as object, tail ?? head!) : undefined };
 }
 
-/** Applies one queued (or live) command against the loaded runtime. */
-export function applyCommand(runtime: KnockRuntime, command: QueuedCommand, debug: boolean): void {
+/** Applies one queued (or live) command against the loaded runtime, and returns what the runtime returned. */
+export function applyCommand(runtime: KnockRuntime, command: QueuedCommand, debug: boolean): unknown {
   const { path, args } = command;
   const { fn, self } = resolve(runtime, path);
 
   if (typeof fn === 'function') {
-    const result = fn.apply(self, args) as KnockSchedulingHandle;
-    if (command.handle) command.handle.attach(result);
-    return;
+    const result: unknown = fn.apply(self, args);
+    if (command.handle) command.handle.attach(result as KnockSchedulingHandle);
+    return result;
   }
   // No dedicated modal in this runtime build — scheduling.load(...).open() is the fallback.
   if (path === 'modal.open') {
     runtime.scheduling.load(args[0] as KnockSchedulingLoadOptions).open();
-    return;
+    return undefined;
   }
   if (debug) console.warn(LOG_PREFIX, `no runtime ${path} — ignored`);
+  return undefined;
 }

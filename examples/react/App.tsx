@@ -2,7 +2,7 @@
 // see docs/frameworks/react.md.
 
 import { useEffect } from 'react';
-import { KnockProvider, KnockButton, useKnock } from '@knock-ai/sdk/react';
+import { KnockProvider, KnockButton, KnockLink, useKnock } from '@knock-ai/sdk/react';
 
 interface CurrentUser {
   email: string;
@@ -39,6 +39,11 @@ function Dashboard({ user }: { user: CurrentUser }) {
       <KnockButton magicLinkId="a1b2c3" email={user.email}>
         Book a demo
       </KnockButton>
+
+      {/* A link to Knock chat: the visitor's identity is added when they open it, not at render. */}
+      <KnockLink href="https://start-chat.com/slack/acme/sales" target="_blank" rel="noopener">
+        Chat with sales
+      </KnockLink>
 
       <button onClick={() => knock.track('upgrade_clicked', { plan: 'pro' })}>Upgrade</button>
     </main>

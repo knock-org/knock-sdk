@@ -97,6 +97,21 @@ export interface KnockSDK {
   scheduling: { load(options: KnockSchedulingLoadOptions): KnockSchedulingHandle };
   widget: { show(): void; hide(): void; open(): void; close(): void };
   on<E extends KnockEventName>(event: E, handler: (payload: KnockEventMap[E]) => void): () => void;
+  /**
+   * Returns `url` with the visitor's Knock identity added, so a Knock chat opened from it knows who
+   * they are. Call it when the visitor opens the link (on click and middle-click), not when you
+   * render it, and put the plain URL back right after, so a copied link stays clean. Before your
+   * Knock tag is ready, on the server, or on a tag that predates it, it returns `url` unchanged.
+   * Synchronous; never throws, never queued. In React, `<KnockLink href={url}>` does all of this.
+   *
+   * @example
+   * link.onclick = () => {
+   *   link.href = knock.wrapLink(url);
+   *   setTimeout(() => (link.href = url));
+   * };
+   * window.open(knock.wrapLink(url));
+   */
+  wrapLink(url: string): string;
   /** True once the runtime has loaded and drained the queue. */
   readonly ready: boolean;
   readonly version: string;
@@ -114,6 +129,8 @@ export interface KnockRuntime {
   modal?: { open(options?: KnockModalOpenOptions): void; close(): void };
   widget?: { show(): void; hide(): void; open(): void; close(): void };
   on?<E extends KnockEventName>(event: E, handler: (payload: KnockEventMap[E]) => void): () => void;
+  /** `url` with the visitor's identity added. Absent on tags that predate it. */
+  wrapLink?(url: string): string;
 }
 
 /** What the SDK writes to `window.__KNOCK_SDK__` on `init()`. Informational; the current Knock tag doesn't read it. */

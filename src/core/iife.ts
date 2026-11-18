@@ -27,7 +27,7 @@ function replay(calls: StubCall[]): void {
 }
 
 // Loaded twice: keep the SDK that's already live (and its queue, subscriptions and ready state).
-if (typeof window !== 'undefined' && !(window.knockai as { __knockai?: true } | undefined)?.__knockai) {
+if (typeof window !== 'undefined' && !(window.knockai && (window.knockai as { __knockai?: true }).__knockai)) {
   const stub = [window.knockai, window.knock].find(isStub);
   const ownsKnock = isKnockGlobal(window.knock);
   window.knockai = knock;

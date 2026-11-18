@@ -42,6 +42,15 @@ describe('KnockPlugin', () => {
     container.remove();
   });
 
+  it('passes the chat options to init', () => {
+    const container = document.createElement('div');
+    const app = createApp(defineComponent({ render: () => h('div') }));
+    app.use(KnockPlugin, { tagId: 'tag_1', chat: { launcher: 'buttons' } });
+    app.mount(container);
+    expect(knock.init).toHaveBeenCalledWith({ tagId: 'tag_1', chat: { launcher: 'buttons' } });
+    app.unmount();
+  });
+
   it('provides the knock singleton to descendants', () => {
     let received: unknown;
     const Probe = defineComponent({

@@ -8,6 +8,10 @@
  */
 import { __setKnockForTesting } from '@knock-ai/sdk';
 import type {
+  KnockChatOpenEvent,
+  KnockChatOpenOptions,
+  KnockChatOptions,
+  KnockChatSkin,
   KnockEventMap,
   KnockEventName,
   KnockFieldValue,
@@ -33,6 +37,11 @@ export type KnockMockCall =
   | { method: 'widget.hide'; args: [] }
   | { method: 'widget.open'; args: [] }
   | { method: 'widget.close'; args: [] }
+  | { method: 'chat.open'; args: [KnockChatOpenOptions | KnockChatOpenEvent | undefined] }
+  | { method: 'chat.close'; args: [] }
+  | { method: 'chat.setSkin'; args: [KnockChatSkin] }
+  | { method: 'chat.resetSkin'; args: [] }
+  | { method: 'chat.configure'; args: [KnockChatOptions] }
   | { method: 'on'; args: [KnockEventName] }
   | { method: 'wrapLink'; args: [string] };
 
@@ -121,6 +130,24 @@ export function createKnockMock(): KnockMock {
       },
       close(): void {
         record({ method: 'widget.close', args: [] });
+      },
+    },
+
+    chat: {
+      open(options): void {
+        record({ method: 'chat.open', args: [options] });
+      },
+      close(): void {
+        record({ method: 'chat.close', args: [] });
+      },
+      setSkin(skin): void {
+        record({ method: 'chat.setSkin', args: [skin] });
+      },
+      resetSkin(): void {
+        record({ method: 'chat.resetSkin', args: [] });
+      },
+      configure(options): void {
+        record({ method: 'chat.configure', args: [options] });
       },
     },
 

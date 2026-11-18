@@ -1,5 +1,14 @@
 /** Runtime implementers' entry: the `window.Knock` contract (types) plus the wire protocol (types + policy constants). */
 export type {
+  KnockChat,
+  KnockChatColors,
+  KnockChatOpenEvent,
+  KnockChatOpenOptions,
+  KnockChatOptions,
+  KnockChatPreset,
+  KnockChatScreens,
+  KnockChatSkin,
+  KnockChatTestScenario,
   KnockEventMap,
   KnockEventName,
   KnockFieldValue,

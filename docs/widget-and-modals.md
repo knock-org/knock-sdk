@@ -95,6 +95,7 @@ off(); // stop listening
 | `ready` | none |
 | `modal:open`, `modal:close` | `{ magicLinkId }` (`null` for your default modal) |
 | `widget:open`, `widget:close` | none |
+| `chat:open`, `chat:close` | `{ test }`, see [Knock chat](chat.md) |
 | `error` | `{ message, cause? }` |
 
 You can call `on()` before or after the SDK is ready. It returns a function that stops listening.

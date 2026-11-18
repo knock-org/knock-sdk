@@ -9,8 +9,12 @@ Only if you use Knock on both your marketing site and your logged-in app. Use yo
 id on the site and your product tag's id in the app.
 
 **How big is it?**
-The core is ≤ 1.74 KB gzip, with zero dependencies. Your Knock tag loads separately, once `init()`
-runs.
+The core is ≤ 2.4 KB gzip, with zero dependencies. Your Knock tag loads separately, once `init()`
+runs. The Knock chat loads separately too, and it is always your tag's chat: the SDK has none of its own.
+When your tag's config has no chat (knock-tag 0.10.1 and later), your first `knock.chat` call makes
+the tag download one from Knock's CDN, the same place as the tag: a chunk of about 3 kB first, then,
+on idle and once it can show, the widget (about 168 kB, plus its look's CSS). With `chat.headless`
+(your own chat UI) it loads about 16 kB instead of the widget.
 
 **Does it work with Next.js, Nuxt and other server rendering?**
 Yes. On the server every call does nothing. See [server rendering](frameworks/vanilla.md#server-rendering)

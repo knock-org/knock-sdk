@@ -9,17 +9,10 @@ import type { KnockSchedulingHandle } from './types.js';
 import { isKnockGlobal, type KnockStub, type StubCall } from './globals.js';
 
 const FACADE_URL = 'https://cdn.jsdelivr.net/npm/@knock-ai/sdk@0.1/dist/knockai.iife.js';
-const PATHS = [
-  'init',
-  'identify',
-  'track',
-  'modal.open',
-  'modal.close',
-  'widget.show',
-  'widget.hide',
-  'widget.open',
-  'widget.close',
-];
+const PATHS =
+  'init identify track modal.open modal.close widget.show widget.hide widget.open widget.close chat.open chat.close chat.setSkin chat.resetSkin chat.configure'.split(
+    ' ',
+  );
 
 (function installStub(): void {
   if (typeof window === 'undefined' || window.knockai) return;
@@ -31,7 +24,7 @@ const PATHS = [
   for (const path of PATHS) {
     const [head, tail] = path.split('.') as [string, string?];
     const fn = (...args: unknown[]) => void q.push([path, args]);
-    if (tail) ((stub[head] ??= {}) as Record<string, unknown>)[tail] = fn;
+    if (tail) ((stub[head] ||= {}) as Record<string, unknown>)[tail] = fn;
     else stub[head] = fn;
   }
 
@@ -67,6 +60,8 @@ const PATHS = [
 
   const script = document.createElement('script');
   script.async = true;
-  script.src = (document.currentScript as HTMLScriptElement | null)?.dataset['knockaiSrc'] ?? FACADE_URL;
+  // Only from a real script element: `<img name="currentScript">` in the page's HTML shadows document.currentScript.
+  const cs = document.currentScript;
+  script.src = (cs instanceof HTMLScriptElement && cs.dataset['knockaiSrc']) || FACADE_URL;
   document.head.appendChild(script);
 })();

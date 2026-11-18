@@ -56,13 +56,4 @@ describe('Emitter', () => {
     unsubscribe();
     expect(() => unsubscribe()).not.toThrow();
   });
-
-  it('clear() removes every handler for every event', () => {
-    const emitter = new Emitter<TestEvents>();
-    const handler = vi.fn();
-    emitter.on('greet', handler);
-    emitter.clear();
-    emitter.emit('greet', 'hi');
-    expect(handler).not.toHaveBeenCalled();
-  });
 });

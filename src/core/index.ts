@@ -12,12 +12,21 @@ import type {
   KnockTagSurface,
 } from './types.js';
 import { Emitter } from './emitter.js';
-import type { QueuedCommand } from './queue.js';
-import { applyCommand, createDeferredSchedulingHandle } from './bridge.js';
+import type { QueuedCommand, RuntimePath } from './queue.js';
+import { LOG_PREFIX, applyCommand, createDeferredSchedulingHandle } from './bridge.js';
 import { bootedTagIds, buildScriptUrl, injectRuntimeScript, writeBootConfig } from './loader.js';
 import { VERSION } from './version.js';
 
 export type {
+  KnockChat,
+  KnockChatColors,
+  KnockChatOpenEvent,
+  KnockChatOpenOptions,
+  KnockChatOptions,
+  KnockChatPreset,
+  KnockChatScreens,
+  KnockChatSkin,
+  KnockChatTestScenario,
   KnockEnvironment,
   KnockEventMap,
   KnockEventName,
@@ -34,13 +43,19 @@ export type {
   KnockSdkBootConfig,
   KnockTagSurface,
 } from './types.js';
+export type {
+  KnockChatAction,
+  KnockChatClient,
+  KnockChatConversation,
+  KnockChatMessage,
+  KnockChatPart,
+  KnockChatPerson,
+} from './chat-types.js';
 export { VERSION } from './version.js';
 
-const LOG_PREFIX = '[knockai]';
 /** Calls held before the runtime is ready; past this the page is calling faster than Knock can load. */
 const MAX_PENDING_COMMANDS = 1000;
-const BRIDGED_EVENTS = ['modal:open', 'modal:close', 'widget:open', 'widget:close', 'error'] as const;
-type WidgetMethod = 'show' | 'hide' | 'open' | 'close';
+const BRIDGED_EVENTS = ['modal:open', 'modal:close', 'widget:open', 'widget:close', 'chat:open', 'chat:close', 'error'] as const;
 
 function browser(): boolean {
   return typeof window !== 'undefined';
@@ -59,6 +74,12 @@ export function createKnock(): KnockSDK {
   let surface: KnockTagSurface | undefined;
   const emitter = new Emitter<KnockEventMap>();
   const pending: QueuedCommand[] = [];
+  /** The Knock tag's script failed: the tag will never be ready, and the chat is part of the tag. */
+  let tagGone = false;
+  /** The tag's chat, asked for once: at the first chat call on a tag whose config has no chat. Its value is the tag's runtime with the chat. */
+  let chat: Promise<KnockRuntime | void> | undefined;
+  /** Stops the events bridged from the runtime in use. */
+  const unbridge: Array<() => void> = [];
 
   function runtime(): KnockRuntime | undefined {
     return ready && browser() ? window.Knock : undefined;
@@ -69,11 +90,56 @@ export function createKnock(): KnockSDK {
     return options.email || !lastEmail ? options : { ...options, email: lastEmail };
   }
 
+  /** The runtime whose events this SDK listens to. */
+  let bridged: KnockRuntime | undefined;
+  /** Sends the runtime's events to this SDK's listeners. Again once the tag has added its chat: `window.Knock` is a new object then. */
+  function bridge(rt: KnockRuntime): void {
+    bridged = rt;
+    for (const off of unbridge.splice(0)) off();
+    for (const event of BRIDGED_EVENTS) {
+      if (event.startsWith('chat:') && !rt.chat) continue; // a tag without the chat does not know these
+      const off = rt.on?.(event, (payload) => emitter.emit(event, payload));
+      if (typeof off === 'function') unbridge.push(off);
+    }
+  }
+
+  const noChat = (cause: unknown): void => emitter.emit('error', { message: 'chat failed to load', cause });
+
+  /** Asks the tag for its chat (`Knock.loadChat()`, knock-tag 0.10.1 and later): the tag downloads it then, and only then. */
+  function tagChat(rt: KnockRuntime): Promise<KnockRuntime | void> {
+    return Promise.resolve(rt.loadChat?.())
+      .then(() => {
+        const now = window.Knock;
+        if (!now?.chat) throw new Error(rt.loadChat ? 'the Knock tag could not load its chat' : 'this Knock tag predates the chat');
+        bridge(now);
+        return now;
+      })
+      .catch(noChat);
+  }
+
   function send(command: QueuedCommand): void {
     if (!browser()) return;
     const rt = runtime();
-    if (rt) applyCommand(rt, command, debug);
-    else enqueue(command);
+    if (rt && rt !== bridged) bridge(rt); // other code loaded the tag's chat: window.Knock is a new object
+    if (!command.path.startsWith('chat.')) {
+      if (rt) applyCommand(rt, command, debug);
+      else enqueue(command);
+    } else if (rt && rt.chat && !chat) applyCommand(rt, command, debug);
+    // In order behind the load: a call made while the tag fetches its chat runs after the calls before it.
+    else if (rt) void (chat ||= tagChat(rt)).then((now) => now && applyCommand(now, command, debug));
+    else if (!tagGone) enqueue(command);
+    else if (!chat) chat = Promise.resolve(noChat(new Error('the Knock tag did not load, and the chat is part of it')));
+  }
+
+  /** Sends the queue again, in order: at ready, and when the tag is gone (chat calls are dropped with one error, the rest wait). */
+  function drain(): void {
+    for (const command of pending.splice(0)) {
+      try {
+        send(command);
+      } catch (error) {
+        if (debug) console.warn(LOG_PREFIX, command.path, error);
+      }
+    }
   }
 
   function enqueue(command: QueuedCommand): void {
@@ -90,14 +156,9 @@ export function createKnock(): KnockSDK {
       return;
     }
     if (rt.surface === 'website' || rt.surface === 'product') surface = rt.surface;
-    for (const command of pending.splice(0)) {
-      try {
-        applyCommand(rt, command, debug);
-      } catch (error) {
-        if (debug) console.warn(LOG_PREFIX, command.path, error);
-      }
-    }
-    for (const event of BRIDGED_EVENTS) rt.on?.(event, (payload) => emitter.emit(event, payload));
+    // Subscribe before draining: a queued call can make the runtime emit at once (chat.open → chat:open).
+    bridge(rt);
+    drain();
     emitter.emit('ready', undefined);
   }
 
@@ -117,6 +178,8 @@ export function createKnock(): KnockSDK {
       environment,
       debug,
     });
+    // Ahead of every earlier call, so the chat is set up before anything opens it.
+    if (options.chat) pending.unshift({ path: 'chat.configure', args: [options.chat] });
     // Never load a second runtime: adopt a tag the vendor already pasted. If it booted first its
     // knock:ready is gone, so attach now; if it's still loading, injectRuntimeScript sees its <script>.
     const tags = bootedTagIds();
@@ -124,14 +187,20 @@ export function createKnock(): KnockSDK {
     if (window.Knock) onReady();
     else {
       window.addEventListener('knock:ready', onReady, { once: true });
-      injectRuntimeScript(buildScriptUrl(environment, options.tagId, options.scriptUrl));
+      const gone = (): void => {
+        tagGone = true;
+        drain();
+      };
+      injectRuntimeScript(buildScriptUrl(environment, options.tagId, options.scriptUrl))?.addEventListener('error', gone);
     }
     if (debug) console.log(LOG_PREFIX, 'initialized', window.__KNOCK_SDK__);
   }
 
-  const widget = {} as Record<WidgetMethod, () => void>;
-  for (const method of ['show', 'hide', 'open', 'close'] as const) {
-    widget[method] = () => send({ path: `widget.${method}`, args: [] });
+  // `widget.*` and `chat.*`: each method forwards its arguments to the same path on the runtime.
+  function group<M extends string>(name: 'widget' | 'chat', methods: M[]): Record<M, (...args: unknown[]) => void> {
+    const target = {} as Record<M, (...args: unknown[]) => void>;
+    for (const method of methods) target[method] = (...args) => send({ path: `${name}.${method}` as RuntimePath, args });
+    return target;
   }
 
   return {
@@ -158,7 +227,8 @@ export function createKnock(): KnockSDK {
         return handle;
       },
     },
-    widget,
+    widget: group('widget', ['show', 'hide', 'open', 'close']),
+    chat: group('chat', ['open', 'close', 'setSkin', 'resetSkin', 'configure']),
     wrapLink(url: string): string {
       const rt = runtime();
       try {

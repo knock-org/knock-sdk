@@ -40,6 +40,30 @@ describe('duplicate runtime handling', () => {
     expect(runtimeScripts()).toHaveLength(1);
   });
 
+  it('adopting a booted tag, applies init({ chat }) as chat.configure before the calls queued earlier', () => {
+    const log: string[] = [];
+    const runtime: KnockRuntime = {
+      ...fakeRuntime(),
+      identify: vi.fn(() => void log.push('identify')),
+      chat: {
+        open: vi.fn(() => void log.push('chat.open')),
+        close: vi.fn(),
+        setSkin: vi.fn(),
+        resetSkin: vi.fn(),
+        configure: vi.fn(() => void log.push('chat.configure')),
+      },
+    };
+    window.Knock = runtime;
+    window.__knockTagInstances = new Map([['tag_1:v1', { tagId: 'tag_1', vendorId: 'v1' }]]);
+
+    sdk.chat.open();
+    sdk.identify({ email: 'dana@acme.com' });
+    sdk.init({ tagId: 'tag_1', chat: { test: true } });
+
+    expect(log).toEqual(['chat.configure', 'chat.open', 'identify']);
+    expect(runtime.chat!.configure).toHaveBeenCalledWith({ test: true });
+  });
+
   it('waits for a pasted tag that is still loading instead of injecting another', () => {
     pasteTag();
     sdk.init({ tagId: 'tag_1', environment: 'production' });

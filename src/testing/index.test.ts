@@ -50,6 +50,40 @@ describe('createKnockMock', () => {
     ]);
   });
 
+  it('records the five chat calls with their arguments', () => {
+    const mock = createKnockMock();
+    mock.chat.configure({ test: 'booking', launcher: 'bubble' });
+    mock.chat.setSkin({ preset: 'harbor' });
+    mock.chat.open({ screen: 'pricing' });
+    mock.chat.open();
+    mock.chat.close();
+    mock.chat.resetSkin();
+
+    expect(mock.calls).toEqual([
+      { method: 'chat.configure', args: [{ test: 'booking', launcher: 'bubble' }] },
+      { method: 'chat.setSkin', args: [{ preset: 'harbor' }] },
+      { method: 'chat.open', args: [{ screen: 'pricing' }] },
+      { method: 'chat.open', args: [undefined] },
+      { method: 'chat.close', args: [] },
+      { method: 'chat.resetSkin', args: [] },
+    ]);
+  });
+
+  it('emits chat:open and chat:close to on() subscribers', () => {
+    const mock = createKnockMock();
+    const received: unknown[] = [];
+    mock.on('chat:open', (payload) => received.push(['open', payload]));
+    mock.on('chat:close', (payload) => received.push(['close', payload]));
+
+    mock.emit('chat:open', { test: true });
+    mock.emit('chat:close', { test: true });
+
+    expect(received).toEqual([
+      ['open', { test: true }],
+      ['close', { test: true }],
+    ]);
+  });
+
   it('returns a working scheduling handle and records its use', () => {
     const mock = createKnockMock();
     const handle = mock.scheduling.load({ magicLinkId: 'm1', email: 'a@example.com' });

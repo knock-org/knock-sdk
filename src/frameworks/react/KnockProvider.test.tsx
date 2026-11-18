@@ -34,6 +34,16 @@ describe('KnockProvider', () => {
     });
   });
 
+  it('passes the chat options to init', () => {
+    const chat = { launcher: 'bubble' as const, skin: { preset: 'harbor' } };
+    render(
+      <KnockProvider tagId="tag_1" chat={chat}>
+        child
+      </KnockProvider>,
+    );
+    expect(knock.init).toHaveBeenCalledWith(expect.objectContaining({ tagId: 'tag_1', chat }));
+  });
+
   it('does not re-init when props change', () => {
     const { rerender } = render(<KnockProvider tagId="tag_1">child</KnockProvider>);
     rerender(

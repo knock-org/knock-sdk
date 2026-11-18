@@ -68,8 +68,8 @@ that URL.
 - **Identify real people, by email.** `identify()` requires an email. In a logged-in app, identify
   the signed-in user. On a marketing site, only where a visitor submits their email. Never on an
   anonymous page load.
-- **Use only the real API.** `init`, `identify`, `track`, `modal`, `scheduling`, `widget`, `on`,
-  `wrapLink`, and the read-only `ready`, `version` and `surface`; in React also `KnockLink`. There's
+- **Use only the real API.** `init`, `identify`, `track`, `modal`, `scheduling`, `widget`, `chat`,
+  `on`, `wrapLink`, and the read-only `ready`, `version` and `surface`; in React also `KnockLink`. There's
   no sign-out or reset call to add.
 - **Re-running is safe.** Detect what's already installed and only fill the gaps
   ([Already installed](#already-installed)). Running this on a finished install changes nothing.

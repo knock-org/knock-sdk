@@ -22,8 +22,4 @@ export class Emitter<EventMap extends object> {
     if (!set) return;
     for (const listener of set) listener(payload);
   }
-
-  clear(): void {
-    this.handlers.clear();
-  }
 }

@@ -1,7 +1,7 @@
 import type { KnockRuntime, KnockSchedulingHandle, KnockSchedulingLoadOptions } from './types.js';
 import type { DeferredSchedulingHandle, QueuedCommand } from './queue.js';
 
-const LOG_PREFIX = '[knockai]';
+export const LOG_PREFIX = '[knockai]';
 
 /** Returned synchronously from `scheduling.load()` before the runtime exists. */
 export function createDeferredSchedulingHandle(): DeferredSchedulingHandle {

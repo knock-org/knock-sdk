@@ -27,6 +27,11 @@ describe('initKnockRuntime', () => {
     initKnockRuntime({ tagId: 'tag_1', debug: true });
     expect(knock.init).toHaveBeenCalledWith({ tagId: 'tag_1', debug: true });
   });
+
+  it('passes the chat options to init', () => {
+    initKnockRuntime({ tagId: 'tag_1', chat: { test: true } });
+    expect(knock.init).toHaveBeenCalledWith({ tagId: 'tag_1', chat: { test: true } });
+  });
 });
 
 describe('provideKnock', () => {

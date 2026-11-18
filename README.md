@@ -9,9 +9,9 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@knock-ai/sdk"><img alt="npm: @knock-ai/sdk" src="https://img.shields.io/badge/npm-%40knock--ai%2Fsdk-cb3837"></a>
-  <a href="#compatibility"><img alt="core size" src="https://img.shields.io/badge/core-%E2%89%A41.74%20kB%20gzip-506bff"></a>
+  <a href="#compatibility"><img alt="core size" src="https://img.shields.io/badge/core-%E2%89%A42.4%20kB%20gzip-506bff"></a>
   <a href="#compatibility"><img alt="zero dependencies" src="https://img.shields.io/badge/dependencies-0-506bff"></a>
-  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+  <a href="#license"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
 </p>
 
 ---
@@ -19,7 +19,7 @@
 `@knock-ai/sdk` lets your code tell Knock who a person is, record what they do, and open your Knock
 scheduling modal, on your marketing site or in your logged-in app. It loads your Knock tag for you
 and queues your calls until it's ready, so you never have to wait for it. It's typed, has zero
-dependencies, and the core is ≤ 1.74 KB gzip.
+dependencies, and the core is ≤ 2.4 KB gzip.
 
 ## Install with your AI agent
 
@@ -67,7 +67,7 @@ Paste this once in `<head>`. It works the same as the npm package: the code afte
 <!-- knockai-snippet:start -->
 ```html
 <script>
-(function(){'use strict';function w(c){return !!c&&Array.isArray(c.q)}function l(c){return !c||w(c)||c.__knockai===true}var f="https://cdn.jsdelivr.net/npm/@knock-ai/sdk@0.1/dist/knockai.iife.js",S=["init","identify","track","modal.open","modal.close","widget.show","widget.hide","widget.open","widget.close"];(function(){var k,d,u;if(typeof window=="undefined"||window.knockai)return;let r=l(window.knock),s=[],o={q:s,ready:false};for(let e of S){let[n,i]=e.split("."),t=(...p)=>{s.push([e,p]);};i?((k=o[n])!=null?k:o[n]={})[i]=t:o[n]=t;}o.on=(...e)=>{let n,i=["on",e,t=>n=t];return s.push(i),()=>n?n():void(i[0]="")},o.wrapLink=e=>e,o.scheduling={load(...e){let n;s.push(["scheduling.load",e,t=>n=t]);let i=t=>()=>n?n[t]():s.push([()=>n[t](),[]]);return {open:i("open"),close:i("close"),get status(){return n?n.status:"loading"}}}},window.knockai=o,r?window.knock=o:console.warn("[knockai] window.knock is taken by this page \u2014 use window.knockai instead");let a=document.createElement("script");a.async=true,a.src=(u=(d=document.currentScript)==null?void 0:d.dataset.knockaiSrc)!=null?u:f,document.head.appendChild(a);})();
+(function(){'use strict';function r(c){return !!c&&Array.isArray(c.q)}function d(c){return !c||r(c)||c.__knockai===true}var p="https://cdn.jsdelivr.net/npm/@knock-ai/sdk@0.1/dist/knockai.iife.js",w="init identify track modal.open modal.close widget.show widget.hide widget.open widget.close chat.open chat.close chat.setSkin chat.resetSkin chat.configure".split(" ");(function(){if(typeof window=="undefined"||window.knockai)return;let u=d(window.knock),s=[],o={q:s,ready:false};for(let e of w){let[n,i]=e.split("."),t=(...l)=>{s.push([e,l]);};i?(o[n]||(o[n]={}))[i]=t:o[n]=t;}o.on=(...e)=>{let n,i=["on",e,t=>n=t];return s.push(i),()=>n?n():void(i[0]="")},o.wrapLink=e=>e,o.scheduling={load(...e){let n;s.push(["scheduling.load",e,t=>n=t]);let i=t=>()=>n?n[t]():s.push([()=>n[t](),[]]);return {open:i("open"),close:i("close"),get status(){return n?n.status:"loading"}}}},window.knockai=o,u?window.knock=o:console.warn("[knockai] window.knock is taken by this page \u2014 use window.knockai instead");let a=document.createElement("script");a.async=true;let k=document.currentScript;a.src=k instanceof HTMLScriptElement&&k.dataset.knockaiSrc||p,document.head.appendChild(a);})();
 })();
 knockai.init({ tagId: 'YOUR_TAG_ID' });
 </script>
@@ -176,6 +176,7 @@ server-rendered code.
 | [Identify](docs/identify.md) | What `identify()` does on each tag, and what to send |
 | [Events](docs/events.md) | `track()`: names, properties, limits |
 | [Scheduling modal and widget](docs/widget-and-modals.md) | `modal.open()`, `scheduling.load()`, buttons, `on()` |
+| [Knock chat](docs/chat.md) | `knock.chat`: what to get from Knock first, open the chat, set its look, show it inside your page, test mode, a tag whose config has no chat, with the tag only, and what to do when it does not show |
 | [Links to Knock](docs/links.md) | `KnockLink`, `wrapLink()`: keep the visitor's identity on your links to Knock chat |
 | [Frameworks](docs/frameworks/) | React, Vue, Angular, plain JavaScript |
 | [Platforms](docs/platforms.md) | Shopify, Wix, Webflow, Framer, WordPress, AI app builders |

@@ -19,6 +19,11 @@ export type RuntimePath =
   | 'widget.hide'
   | 'widget.open'
   | 'widget.close'
+  | 'chat.open'
+  | 'chat.close'
+  | 'chat.setSkin'
+  | 'chat.resetSkin'
+  | 'chat.configure'
   | 'wrapLink';
 
 export interface QueuedCommand {

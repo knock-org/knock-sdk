@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildScriptUrl, injectRuntimeScript, writeBootConfig } from './loader.js';
+import { buildScriptUrl, injectRuntimeScript, runtimeScript, writeBootConfig } from './loader.js';
 import type { KnockSdkBootConfig } from './types.js';
 
 const bootConfig: KnockSdkBootConfig = {
@@ -70,6 +70,26 @@ describe('injectRuntimeScript', () => {
     injectRuntimeScript('https://example.com/runtime.js');
     injectRuntimeScript('https://example.com/runtime.js');
     expect(document.querySelectorAll('script').length).toBe(1);
+  });
+
+  it('returns the script it added, and the same one on a second call', () => {
+    const script = injectRuntimeScript('https://example.com/runtime.js');
+    expect(script).toBe(document.getElementById('knockai-runtime'));
+    expect(injectRuntimeScript('https://example.com/runtime.js')).toBe(script);
+  });
+
+  it('returns a Knock tag the page pasted, and adds none', () => {
+    const pasted = document.createElement('script');
+    pasted.src = 'https://js.knock-ai.com/tag_1.js';
+    document.head.appendChild(pasted);
+    expect(runtimeScript()).toBe(pasted);
+    expect(injectRuntimeScript('https://example.com/runtime.js')).toBe(pasted);
+    expect(document.scripts).toHaveLength(1);
+  });
+
+  it('finds no runtime script on a page without one', () => {
+    document.head.innerHTML = '<script src="https://cdn.example.com/app.js"></script>';
+    expect(runtimeScript()).toBeUndefined();
   });
 
   it('is a no-op without a document', () => {

@@ -23,6 +23,19 @@ For the CDN install (HTML pages), also:
 `img-src` also needs the hosts of the widget's logo and agent photos. You can't see those from the
 code, so add a "Before you merge" item asking the user to add them.
 
+If the site uses the chat (`init({ chat })` or `knock.chat`), also add:
+
+```text
+connect-src  https://app.knock-ai.com
+img-src      https://assets.start-chat.com https://avatars.slack-edge.com https://a.slack-edge.com https://secure.gravatar.com
+style-src    https://fonts.googleapis.com
+font-src     https://fonts.gstatic.com
+```
+
+`https://app.knock-ai.com` is the chat API: without it the chat can't start. The `img-src` hosts
+serve rep photos and the files reps send. The two font sources are needed only when the chat's skin
+loads web fonts (not with `typography: { loadFonts: false }`).
+
 ## Where policies live
 
 | Where | Look for |

@@ -114,6 +114,38 @@ describe('applyCommand', () => {
   });
 });
 
+describe('applyCommand: chat', () => {
+  const chat = () => ({ open: vi.fn(), close: vi.fn(), setSkin: vi.fn(), resetSkin: vi.fn(), configure: vi.fn() });
+
+  it.each([
+    ['chat.open', [{ screen: 'pricing', message: 'Hi' }]],
+    ['chat.close', []],
+    ['chat.setSkin', [{ preset: 'harbor' }]],
+    ['chat.resetSkin', []],
+    ['chat.configure', [{ launcher: 'bubble' }]],
+  ] as const)('%s calls the matching runtime.chat method with its arguments', (path, args) => {
+    const runtime = createRuntime({ chat: chat() });
+    applyCommand(runtime, { path, args: [...args] }, false);
+    const method = path.split('.')[1] as keyof NonNullable<KnockRuntime['chat']>;
+    expect(runtime.chat![method]).toHaveBeenCalledWith(...args);
+  });
+
+  it('warns in debug mode and returns undefined when the runtime has no chat', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    expect(applyCommand(createRuntime(), { path: 'chat.open', args: [] }, true)).toBeUndefined();
+    expect(warn).toHaveBeenCalledWith('[knockai]', 'no runtime chat.open — ignored');
+    warn.mockRestore();
+  });
+
+  it('warns when the runtime chat lacks the method', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const runtime = createRuntime({ chat: { open: vi.fn() } as unknown as KnockRuntime['chat'] });
+    expect(() => applyCommand(runtime, { path: 'chat.resetSkin', args: [] }, true)).not.toThrow();
+    expect(warn).toHaveBeenCalledWith('[knockai]', 'no runtime chat.resetSkin — ignored');
+    warn.mockRestore();
+  });
+});
+
 describe('createDeferredSchedulingHandle', () => {
   it('reports status "loading" until attached', () => {
     const handle = createDeferredSchedulingHandle();

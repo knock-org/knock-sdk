@@ -2,7 +2,7 @@
 
 > The Knock AI SDK for marketing sites and logged-in apps: identify people, track events, and open
 > the Knock scheduling modal. npm package: `@knock-ai/sdk` (formerly `knockai`, same API). Zero
-> dependencies, core ≤ 1.74 KB gzip, safe to import on the server.
+> dependencies, core ≤ 2.4 KB gzip, safe to import on the server.
 
 ## Install
 
@@ -45,8 +45,9 @@ readiness check is needed. On the server every call does nothing.
 
 ## API (exact types ship in the package, under `dist/types/`)
 
-- `init({ tagId, debug?, scriptUrl? })`: call once; a second call is ignored. `debug: true` prints
-  the SDK's own warnings.
+- `init({ tagId, debug?, scriptUrl?, chat? })`: call once; a second call is ignored. `debug: true`
+  prints the SDK's own warnings. `chat` is sent to the chat as `chat.configure(chat)`, ahead of
+  every other call.
 - `identify(traits)`: one argument. `traits.email` is required; `firstName`, `lastName`,
   `company` (a company name string) and other fields are optional. Safe to call more than once.
 - `track(name, properties?)`: names are lowercased and turned into snake_case, cut to 64 characters,
@@ -56,9 +57,45 @@ readiness check is needed. On the server every call does nothing.
   Knock modal; `email` is only used with `magicLinkId`.
 - `scheduling.load({ magicLinkId, email?, onStatusChange? })` returns `{ open(), close(), status }`.
 - `widget.show()` / `widget.hide()` / `widget.open()` / `widget.close()`
+- `chat.open({ screen?, message?, send?, magicLinkId? })` / `chat.close()` / `chat.setSkin(skin)` /
+  `chat.resetSkin()` / `chat.configure({ skin?, launcher?, screens?, starters?, brandName?,
+  agentName?, agentImageUrl?, magicLinkId?, container?, headless?, test? })`. A `magicLinkId` set by `open()` or `configure()`
+  stays until another is set; `configure({ magicLinkId: null })` goes back to the tag's link.
+  `container` (an element, or a CSS selector) shows the chat inline, inside that element, instead
+  of floating over the page: it fills the element, which needs a height, and has no bubble and no
+  close button. The conversation starts at the visitor's first action or at `open()`, and `close()`
+  does nothing; `configure({ container: null })` goes back to the floating chat. In a single-page
+  app, pass the element from the component that renders it (`configure({ container: ref.current })`
+  in an effect), not a selector in `init()`. The chat is always the Knock tag's: the SDK has none of
+  its own. When the tag's config has the chat, the SDK passes every call to `Knock.chat`. When it
+  has none, a tag from knock-tag 0.10.1 and later has `Knock.loadChat()`: the SDK calls it once, at
+  the first chat call (`chat` in `init()` counts), and the tag downloads its own chat from Knock's
+  CDN (js.knock-ai.com, where the tag is): a 3 kB gzip chunk, then, on idle and only when the chat
+  can show, the widget (about 168 kB gzip, plus the look's CSS). Calls made meanwhile reach the
+  chat in order. A tag from 0.10.0 or earlier without the chat in its config, a chat file that fails
+  to load or a tag script that fails to load fires one `error` (`'chat failed to load'`), and then
+  chat calls do nothing and never throw. That chat is set up from code only, so a live chat needs
+  `magicLinkId` in `init({ chat })` or `configure()`. A live chat also needs Knock to switch the chat on and to allow each origin the page
+  loads from (exact scheme, host and port; localhost and staging too); `magicLinkId` is the link's
+  ID, not its URL. Test mode needs none of that. A missing link, a page inside an iframe, a refused origin and an
+  unknown or switched-off link each print one `Vendor chat:` warning: see docs/chat.md, "If the chat
+  does not show". The skin's `assets` group takes pictures by URL: `bubble`, `wall` (drawn as a soft
+  pattern from the picture's shape; another origin needs CORS) and `header` (a logo). `skin.layout.mode:
+  'sidebar'` docks the chat to a side of the page on desktop (docs/chat.md, "Sidebar"). Presets: `harbor`, `nightshift`, `fieldbook`, `signal`, `terminal`, `pixel`.
+  `onClick={knock.chat.open}` works: the chat ignores the click event and opens as `open()` does.
+  `headless: (chat: KnockChatClient) => void` draws the chat with your own UI: Knock renders nothing
+  and downloads no UI (when the tag's config has no chat, the tag loads its headless chunk, about 16 kB
+  gzip). Set it in
+  `init({ chat })`. The client has `getState()` (a `KnockChatConversation`: `status`, `messages`,
+  `typing`, `starters`, `unread`; the same object until it changes), `subscribe(listener)`,
+  `send(text)` (a boolean), `retry(messageId)` and `resolveAction(actionId)`. A message has `parts`
+  of type `text` (Markdown for the agent and reps), `image`, `actions` (`{ id, label, primary, kind }`)
+  or `joined`; skip a type you don't know, later versions can add some. `open()` and `close()` mark
+  your UI as shown or hidden.
 - `on(event, handler)` returns an unsubscribe function. Events: `ready`, `modal:open`,
-  `modal:close`, `widget:open`, `widget:close`, `error`. `ready` fires once; a handler added
-  after that still runs, once.
+  `modal:close`, `widget:open`, `widget:close`, `chat:open`, `chat:close` (`{ test }`), `error`
+  (`{ message, cause }`; the chat's messages are listed in docs/chat.md, "Events").
+  `ready` fires once; a handler added after that still runs, once.
 - `wrapLink(url)` returns `url` with the visitor's Knock identity added, so a Knock chat link
   (`start-chat.com`, `login.start-chat.com`) opened from it keeps who the visitor is. Synchronous;
   before the Knock tag is ready and on the server it returns `url` unchanged; never throws. Call it
@@ -93,6 +130,7 @@ readiness check is needed. On the server every call does nothing.
 - docs/events.md: track(), names, properties, limits
 - docs/widget-and-modals.md: modal.open, scheduling.load, buttons, widget, on()
 - docs/links.md: KnockLink and wrapLink(), for links to Knock chat
+- docs/chat.md: what to get from Knock first, knock.chat, init({ chat }), the inline chat (`container`), headless (your own UI), test mode, chat events and errors, the tag-only setup (`data-knock-chat`, `knockq`), what to do when the chat does not show
 - docs/frameworks/{react,vue,angular,vanilla}.md
 - docs/platforms.md: Shopify, Wix, Webflow, Framer, WordPress, AI app builders
 - docs/csp.md: Content-Security-Policy
